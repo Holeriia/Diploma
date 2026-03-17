@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://studentProfileView.title">
+
+<data>
+    <instance id="studentDc"
+              class="com.company.diploma.entity.Student">
+        <fetchPlan extends="_base">
+            <property name="user" fetchPlan="_base"/>
+            <property name="group" fetchPlan="_base"/>
+            <property name="department" fetchPlan="_base"/>
+        </fetchPlan>
+    </instance>
+</data>
+
+<layout>
+    <h3 text="Профиль студента"/>
+
+    <formLayout classNames="gap-m">
+        <button id="editBtn" text="Изменить"/>
+        <button id="saveBtn" text="Сохранить"/>
+    </formLayout>
+
+    <formLayout id="form" width="100%">
+        <!-- User (ФИО/контакты) -->
+        <textField id="lastNameField" property="user.lastName" label="Фамилия"/>
+        <textField id="firstNameField" property="user.firstName" label="Имя"/>
+        <textField id="patronymicField" property="user.patronymic" label="Отчество"/>
+
+        <textField id="phoneField" property="user.phoneNumber" label="Телефон"/>
+        <emailField id="emailField" property="user.email" label="Почта"/>
+
+        <!-- Student fields (кроме user) -->
+        <entityPicker id="groupField"
+                      dataContainer="studentDc"
+                      property="group"
+                      label="Группа"/>
+
+        <entityPicker id="departmentField"
+                      dataContainer="studentDc"
+                      property="department"
+                      label="Кафедра"/>
+
+        <numberField id="averageScoreField" property="averageScore" label="Средний балл"/>
+        <comboBox id="basisOfLearningField"
+                  property="basisOfLearning"
+                  label="Основа обучения"
+                  itemsEnum="com.company.diploma.entity.BasisOfLearning"/>
+        <textField id="snilsField" property="snils" label="СНИЛС"/>
+    </formLayout>
+</layout>
+</view>
