@@ -19,9 +19,19 @@ repositories {
     maven {
         url = 'https://global.repo.jmix.io/repository/public'
     }
+    maven {
+        url = 'https://global.repo.jmix.io/repository/premium'
+        credentials {
+            username = rootProject['premiumRepoUser']
+            password = rootProject['premiumRepoPass']
+        }
+    }
 }
 
 dependencies {
+    implementation 'io.jmix.bpm:jmix-bpm-starter'
+    implementation 'io.jmix.bpm:jmix-bpm-flowui-starter'
+
     implementation 'io.jmix.core:jmix-core-starter'
     implementation 'io.jmix.data:jmix-eclipselink-starter'
     implementation 'io.jmix.security:jmix-security-starter'

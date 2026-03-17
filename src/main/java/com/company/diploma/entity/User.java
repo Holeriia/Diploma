@@ -8,9 +8,10 @@ import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.security.authentication.JmixUserDetails;
-import org.springframework.security.core.GrantedAuthority;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import org.springframework.security.core.GrantedAuthority;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class User implements JmixUserDetails, HasTimeZone {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false)
     @JmixGeneratedValue
     private UUID id;
 
@@ -45,9 +46,18 @@ public class User implements JmixUserDetails, HasTimeZone {
     @Column(name = "LAST_NAME")
     private String lastName;
 
+    @Column(name = "PATRONYMIC")
+    private String patronymic;
+
     @Email
     @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
+    @Column(name = "USER_ROLE")
+    private String userRole;
 
     @Column(name = "ACTIVE")
     private Boolean active = true;
@@ -57,6 +67,30 @@ public class User implements JmixUserDetails, HasTimeZone {
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
+
+    public UserRole getUserRole() {
+        return userRole == null ? null : UserRole.fromId(userRole);
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole == null ? null : userRole.getId();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
 
     public UUID getId() {
         return id;

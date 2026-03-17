@@ -7,5 +7,10 @@
 
     <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="true">
         <item view="User.list" title="msg://com.company.diploma.view.user/UserListView.title"/>
+        <item view="Department.list" title="msg://com.company.diploma.view.department/departmentListView.title"/>
+        <item view="Degree.list" title="msg://com.company.diploma.view.degree/degreeListView.title"/>
+        <item view="Title.list" title="msg://com.company.diploma.view.title/titleListView.title"/>
+        <item view="Position_.list" title="msg://com.company.diploma.view.position/positionListView.title"/>
+        <item view="Group_.list" title="msg://com.company.diploma.view.group/groupListView.title"/>
     </menu>
 </menu-config>
