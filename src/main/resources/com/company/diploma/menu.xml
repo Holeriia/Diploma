@@ -5,6 +5,7 @@
 
         <item view="StudentProfileView" title="msg://com.company.diploma.view.studentprofile/studentProfileView.title"/>
         <item view="TeacherProfileView" title="msg://com.company.diploma.view.teacherprofile/teacherProfileView.title"/>
+        <item view="MyWorkspace.list" title="msg://com.company.diploma.view.workspace/myWorkspaceListView.title"/>
     </menu>
 
     <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="true">
@@ -14,5 +15,6 @@
         <item view="Title.list" title="msg://com.company.diploma.view.title/titleListView.title"/>
         <item view="Position_.list" title="msg://com.company.diploma.view.position/positionListView.title"/>
         <item view="Group_.list" title="msg://com.company.diploma.view.group/groupListView.title"/>
+        <item view="Workspace.list" title="msg://com.company.diploma.view.workspace/workspaceListView.title"/>
     </menu>
 </menu-config>

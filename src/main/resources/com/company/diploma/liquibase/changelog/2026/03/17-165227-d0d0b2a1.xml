@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <createTable tableName="ASSIGNMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASSIGNMENT"/>
+            </column>
+            <column name="WORKSPACE" type="VARCHAR(255)"/>
+            <column name="TOPIC" type="VARCHAR(255)"/>
+            <column name="MENTOR_ID" type="UUID"/>
+            <column name="MENTEE_ID" type="UUID"/>
+            <column name="REQUEST_ID" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <createTable tableName="PARTICIPANT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PARTICIPANT"/>
+            </column>
+            <column name="USER_ID" type="UUID"/>
+            <column name="WORKSPACE_ID" type="UUID"/>
+            <column name="MAX_ASSIGNMENTS" type="INT"/>
+            <column name="ASSIGNMENTS_NOW" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="Diploma">
+        <createTable tableName="REQUEST">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REQUEST"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="CLOB"/>
+            <column name="WORKSPACE_ID" type="UUID"/>
+            <column name="INITIATOR_ID" type="UUID"/>
+            <column name="STATUS" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="Diploma">
+        <createTable tableName="REQUEST_COMMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REQUEST_COMMENT"/>
+            </column>
+            <column name="REQUEST_ID" type="UUID"/>
+            <column name="AUTHOR_ID" type="UUID"/>
+            <column name="MESSAGE" type="CLOB"/>
+            <column name="CREATED_AT" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="5" author="Diploma">
+        <createTable tableName="REQUEST_PRIORITY">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REQUEST_PRIORITY"/>
+            </column>
+            <column name="REQUEST_ID" type="UUID"/>
+            <column name="PRIORITY_NUMBER" type="INT"/>
+            <column name="PARTICIPANT_ID" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="6" author="Diploma">
+        <createTable tableName="WORKSPACE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WORKSPACE"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="7" author="Diploma">
+        <createIndex indexName="IDX_ASSIGNMENT_MENTEE" tableName="ASSIGNMENT">
+            <column name="MENTEE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="MENTEE_ID" baseTableName="ASSIGNMENT"
+                                 constraintName="FK_ASSIGNMENT_ON_MENTEE" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+    <changeSet id="8" author="Diploma">
+        <createIndex indexName="IDX_ASSIGNMENT_MENTOR" tableName="ASSIGNMENT">
+            <column name="MENTOR_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="MENTOR_ID" baseTableName="ASSIGNMENT"
+                                 constraintName="FK_ASSIGNMENT_ON_MENTOR" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+    <changeSet id="9" author="Diploma">
+        <createIndex indexName="IDX_ASSIGNMENT_REQUEST" tableName="ASSIGNMENT">
+            <column name="REQUEST_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="REQUEST_ID" baseTableName="ASSIGNMENT"
+                                 constraintName="FK_ASSIGNMENT_ON_REQUEST" referencedColumnNames="ID"
+                                 referencedTableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="10" author="Diploma">
+        <createIndex indexName="IDX_PARTICIPANT_USER" tableName="PARTICIPANT">
+            <column name="USER_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="PARTICIPANT"
+                                 constraintName="FK_PARTICIPANT_ON_USER" referencedColumnNames="ID"
+                                 referencedTableName="USER_"/>
+    </changeSet>
+    <changeSet id="11" author="Diploma">
+        <createIndex indexName="IDX_PARTICIPANT_WORKSPACE" tableName="PARTICIPANT">
+            <column name="WORKSPACE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="WORKSPACE_ID" baseTableName="PARTICIPANT"
+                                 constraintName="FK_PARTICIPANT_ON_WORKSPACE" referencedColumnNames="ID"
+                                 referencedTableName="WORKSPACE"/>
+    </changeSet>
+    <changeSet id="12" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_COMMENT_AUTHOR" tableName="REQUEST_COMMENT">
+            <column name="AUTHOR_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="AUTHOR_ID" baseTableName="REQUEST_COMMENT"
+                                 constraintName="FK_REQUEST_COMMENT_ON_AUTHOR" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+    <changeSet id="13" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_COMMENT_REQUEST" tableName="REQUEST_COMMENT">
+            <column name="REQUEST_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="REQUEST_ID" baseTableName="REQUEST_COMMENT"
+                                 constraintName="FK_REQUEST_COMMENT_ON_REQUEST" referencedColumnNames="ID"
+                                 referencedTableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="14" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_INITIATOR" tableName="REQUEST">
+            <column name="INITIATOR_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="INITIATOR_ID" baseTableName="REQUEST"
+                                 constraintName="FK_REQUEST_ON_INITIATOR" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+    <changeSet id="15" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_PRIORITY_PARTICIPANT" tableName="REQUEST_PRIORITY">
+            <column name="PARTICIPANT_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="PARTICIPANT_ID" baseTableName="REQUEST_PRIORITY"
+                                 constraintName="FK_REQUEST_PRIORITY_ON_PARTICIPANT" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+    <changeSet id="16" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_PRIORITY_REQUEST" tableName="REQUEST_PRIORITY">
+            <column name="REQUEST_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="REQUEST_ID" baseTableName="REQUEST_PRIORITY"
+                                 constraintName="FK_REQUEST_PRIORITY_ON_REQUEST" referencedColumnNames="ID"
+                                 referencedTableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="17" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_WORKSPACE" tableName="REQUEST">
+            <column name="WORKSPACE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="WORKSPACE_ID" baseTableName="REQUEST"
+                                 constraintName="FK_REQUEST_ON_WORKSPACE" referencedColumnNames="ID"
+                                 referencedTableName="WORKSPACE"/>
+    </changeSet>
+</databaseChangeLog>
