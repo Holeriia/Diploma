@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://teacherProfileView.title">
+
+    <data>
+        <instance id="teacherDc" class="com.company.diploma.entity.Teacher">
+            <fetchPlan extends="_base">
+                <property name="user" fetchPlan="_base">
+                    <property name="interests" fetchPlan="_base"/>
+                </property>
+                <property name="department" fetchPlan="_base"/>
+                <property name="degree" fetchPlan="_base"/>
+                <property name="title" fetchPlan="_base"/>
+                <property name="position" fetchPlan="_base"/>
+            </fetchPlan>
+        </instance>
+
+        <collection id="departmentsDc" class="com.company.diploma.entity.Department" fetchPlan="_base">
+            <loader id="departmentsDl">
+                <query><![CDATA[select e from Department e order by e.id]]></query>
+            </loader>
+        </collection>
+        <collection id="degreesDc" class="com.company.diploma.entity.Degree" fetchPlan="_base">
+            <loader id="degreesDl">
+                <query><![CDATA[select e from Degree e]]></query>
+            </loader>
+        </collection>
+        <collection id="titlesDc" class="com.company.diploma.entity.Title" fetchPlan="_base">
+            <loader id="titlesDl">
+                <query><![CDATA[select e from Title e]]></query>
+            </loader>
+        </collection>
+        <collection id="positionsDc" class="com.company.diploma.entity.Position" fetchPlan="_base">
+            <loader id="positionsDl">
+                <query><![CDATA[select e from Position_ e]]></query>
+            </loader>
+        </collection>
+        <collection id="interestsDc" class="com.company.diploma.entity.Interest" fetchPlan="_base">
+            <loader id="interestsDl">
+                <query><![CDATA[select e from Interest e order by e.name]]></query>
+            </loader>
+        </collection>
+    </data>
+
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+
+    <layout>
+        <formLayout classNames="gap-m">
+            <button id="editBtn" text="Изменить"/>
+            <button id="saveBtn" text="Сохранить"/>
+        </formLayout>
+
+        <formLayout id="form" dataContainer="teacherDc" width="100%">
+            <textField id="lastNameField" property="user.lastName" label="Фамилия"/>
+            <textField id="firstNameField" property="user.firstName" label="Имя"/>
+            <textField id="patronymicField" property="user.patronymic" label="Отчество"/>
+            <textField id="phoneField" property="user.phoneNumber" label="Телефон"/>
+            <emailField id="emailField" property="user.email" label="Почта"/>
+
+            <entityComboBox id="departmentField" property="department"
+                            itemsContainer="departmentsDc" label="Кафедра"/>
+            <entityComboBox id="degreeField" property="degree"
+                            itemsContainer="degreesDc" label="Ученая степень"/>
+            <entityComboBox id="titleField" property="title"
+                            itemsContainer="titlesDc" label="Ученое звание"/>
+            <entityComboBox id="positionField" property="position"
+                            itemsContainer="positionsDc" label="Должность"/>
+
+            <multiValuePicker id="interestsField"
+                              property="user.interests"
+                              dataContainer="teacherDc"
+                              label="Мои интересы"
+                              colspan="2">
+                <actions>
+                    <action id="multiValueSelect" type="multi_value_select">
+                        <properties>
+                            <property name="javaClass" value="com.company.diploma.entity.Interest"/>
+                        </properties>
+                    </action>
+                    <action id="valueClear" type="value_clear"/>
+                </actions>
+            </multiValuePicker>
+        </formLayout>
+    </layout>
+</view>

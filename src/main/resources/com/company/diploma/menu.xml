@@ -4,6 +4,7 @@
     <menu id="application" title="msg://com.company.diploma/menu.application.title" opened="true">
 
         <item view="StudentProfileView" title="msg://com.company.diploma.view.studentprofile/studentProfileView.title"/>
+        <item view="TeacherProfileView" title="msg://com.company.diploma.view.teacherprofile/teacherProfileView.title"/>
     </menu>
 
     <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="true">
