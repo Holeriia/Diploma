@@ -2,7 +2,10 @@
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
     <menu id="application" title="msg://com.company.diploma/menu.application.title" opened="true">
-        <item view="User.list" title="msg://com.company.diploma.view.user/UserListView.title"/>
+
     </menu>
 
+    <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="true">
+        <item view="User.list" title="msg://com.company.diploma.view.user/UserListView.title"/>
+    </menu>
 </menu-config>
