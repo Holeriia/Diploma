@@ -5,10 +5,10 @@
     <data>
         <instance id="studentDc" class="com.company.diploma.entity.Student">
             <fetchPlan extends="_base">
-                <property name="user" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base">
+                    <property name="interests" fetchPlan="_base"/> </property>
                 <property name="group" fetchPlan="_base"/>
                 <property name="department" fetchPlan="_base"/>
-                <property name="interests" fetchPlan="_base"/>
             </fetchPlan>
         </instance>
 
@@ -63,7 +63,7 @@
             <textField id="snilsField" property="snils" label="СНИЛС"/>
 
             <multiValuePicker id="interestsField"
-                              property="interests"
+                              property="user.interests"
                               dataContainer="studentDc"
                               label="Мои интересы"
                               colspan="2">

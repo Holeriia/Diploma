@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -27,6 +28,12 @@ public class User implements JmixUserDetails, HasTimeZone {
     @Column(name = "ID", nullable = false)
     @JmixGeneratedValue
     private UUID id;
+
+    @JoinTable(name = "USER_INTEREST_LINK",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "INTEREST_ID"))
+    @ManyToMany
+    private List<Interest> interests;
 
     @Version
     @Column(name = "VERSION", nullable = false)
@@ -67,6 +74,14 @@ public class User implements JmixUserDetails, HasTimeZone {
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
+
+    public List<Interest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<Interest> interests) {
+        this.interests = interests;
+    }
 
     public UserRole getUserRole() {
         return userRole == null ? null : UserRole.fromId(userRole);

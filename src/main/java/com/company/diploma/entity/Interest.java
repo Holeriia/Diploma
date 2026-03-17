@@ -24,18 +24,18 @@ public class Interest {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @JoinTable(name = "STUDENT_INTEREST_LINK",
+    @JoinTable(name = "USER_INTEREST_LINK",
             joinColumns = @JoinColumn(name = "INTEREST_ID"),
-            inverseJoinColumns = @JoinColumn(name = "STUDENT_ID"))
+            inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     @ManyToMany
-    private List<Student> students;
+    private List<User> users;
 
-    public List<Student> getStudents() {
-        return students;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public String getDescription() {

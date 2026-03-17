@@ -6,7 +6,6 @@ import io.jmix.core.metamodel.annotation.NumberFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -44,20 +43,6 @@ public class Student {
 
     @Column(name = "SNILS")
     private String snils;
-
-    @JoinTable(name = "STUDENT_INTEREST_LINK",
-            joinColumns = @JoinColumn(name = "STUDENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "INTEREST_ID"))
-    @ManyToMany
-    private List<Interest> interests;
-
-    public List<Interest> getInterests() {
-        return interests;
-    }
-
-    public void setInterests(List<Interest> interests) {
-        this.interests = interests;
-    }
 
     public void setAverageScore(Double averageScore) {
         this.averageScore = averageScore;

@@ -79,6 +79,7 @@ public class StudentProfileView extends StandardView {
                         .add("user", FetchPlan.BASE)
                         .add("group", FetchPlan.BASE)
                         .add("department", FetchPlan.BASE)
+                        .add("user.interests", FetchPlan.BASE)
                 )
                 .list();
 
@@ -92,15 +93,7 @@ public class StudentProfileView extends StandardView {
 
     @Subscribe("saveBtn")
     public void onSaveBtnClick(final ClickEvent<JmixButton> event) {
-        User currentUser = (User) currentAuthentication.getUser();
-
-        Student student = studentDc.getItem();
-        // на всякий случай принудительно выставляем текущего пользователя
-        student.setUser(currentUser);
-
-        // сохранит и Student, и измененный User (если он изменялся в форме)
-        dataManager.save(student.getUser(), student);
-
+        dataContext.save();
         setEditMode(false);
     }
 
