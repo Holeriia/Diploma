@@ -6,6 +6,7 @@ import io.jmix.core.metamodel.annotation.NumberFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -32,7 +33,7 @@ public class Student {
 
     @NumberFormat(pattern = "0.00")
     @Column(name = "AVERAGE_SCORE")
-    private Float averageScore;
+    private Double averageScore;
 
     @JoinColumn(name = "DEPARTMENT_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,6 +44,28 @@ public class Student {
 
     @Column(name = "SNILS")
     private String snils;
+
+    @JoinTable(name = "STUDENT_INTEREST_LINK",
+            joinColumns = @JoinColumn(name = "STUDENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "INTEREST_ID"))
+    @ManyToMany
+    private List<Interest> interests;
+
+    public List<Interest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<Interest> interests) {
+        this.interests = interests;
+    }
+
+    public void setAverageScore(Double averageScore) {
+        this.averageScore = averageScore;
+    }
+
+    public Double getAverageScore() {
+        return averageScore;
+    }
 
     public String getSnils() {
         return snils;
@@ -66,14 +89,6 @@ public class Student {
 
     public void setDepartment(Department department) {
         this.department = department;
-    }
-
-    public Float getAverageScore() {
-        return averageScore;
-    }
-
-    public void setAverageScore(Float averageScore) {
-        this.averageScore = averageScore;
     }
 
     public Group getGroup() {

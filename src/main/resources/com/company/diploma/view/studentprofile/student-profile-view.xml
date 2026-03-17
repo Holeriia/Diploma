@@ -3,26 +3,28 @@
       title="msg://studentProfileView.title">
 
     <data>
-        <instance id="studentDc"
-                  class="com.company.diploma.entity.Student">
+        <instance id="studentDc" class="com.company.diploma.entity.Student">
             <fetchPlan extends="_base">
                 <property name="user" fetchPlan="_base"/>
                 <property name="group" fetchPlan="_base"/>
                 <property name="department" fetchPlan="_base"/>
+                <property name="interests" fetchPlan="_base"/>
             </fetchPlan>
         </instance>
 
-        <collection id="groupsDc"
-                    class="com.company.diploma.entity.Group"
-                    fetchPlan="_base">
+        <collection id="interestsDc" class="com.company.diploma.entity.Interest" fetchPlan="_base">
+            <loader id="interestsDl">
+                <query><![CDATA[select e from Interest e order by e.name]]></query>
+            </loader>
+        </collection>
+
+        <collection id="groupsDc" class="com.company.diploma.entity.Group" fetchPlan="_base">
             <loader id="groupsDl">
                 <query><![CDATA[select g from Group_ g order by g.name]]></query>
             </loader>
         </collection>
 
-        <collection id="departmentsDc"
-                    class="com.company.diploma.entity.Department"
-                    fetchPlan="_base">
+        <collection id="departmentsDc" class="com.company.diploma.entity.Department" fetchPlan="_base">
             <loader id="departmentsDl">
                 <query><![CDATA[select d from Department d order by d.id]]></query>
             </loader>
@@ -33,46 +35,48 @@
         <dataLoadCoordinator auto="true"/>
     </facets>
 
-<layout>
-    <h3 text="Профиль студента"/>
+    <layout>
 
-    <formLayout classNames="gap-m">
-        <button id="editBtn" text="Изменить"/>
-        <button id="saveBtn" text="Сохранить"/>
-    </formLayout>
+        <formLayout classNames="gap-m">
+            <button id="editBtn" text="Изменить"/>
+            <button id="saveBtn" text="Сохранить"/>
+        </formLayout>
 
-    <formLayout id="form"
-                dataContainer="studentDc"
-                width="100%">
+        <formLayout id="form" dataContainer="studentDc" width="100%">
+            <textField id="lastNameField" property="user.lastName" label="Фамилия"/>
+            <textField id="firstNameField" property="user.firstName" label="Имя"/>
+            <textField id="patronymicField" property="user.patronymic" label="Отчество"/>
+            <textField id="phoneField" property="user.phoneNumber" label="Телефон"/>
+            <emailField id="emailField" property="user.email" label="Почта"/>
 
-        <textField id="lastNameField" property="user.lastName" label="Фамилия"/>
-        <textField id="firstNameField" property="user.firstName" label="Имя"/>
-        <textField id="patronymicField" property="user.patronymic" label="Отчество"/>
+            <entityComboBox id="groupField" dataContainer="studentDc" property="group"
+                            itemsContainer="groupsDc" label="Группа"/>
 
-        <textField id="phoneField" property="user.phoneNumber" label="Телефон"/>
-        <emailField id="emailField" property="user.email" label="Почта"/>
+            <entityComboBox id="departmentField" dataContainer="studentDc" property="department"
+                            itemsContainer="departmentsDc" label="Кафедра"/>
 
-        <entityComboBox id="groupField"
-                        dataContainer="studentDc"
-                        property="group"
-                        itemsContainer="groupsDc"
-                        label="Группа"/>
+            <numberField id="averageScoreField" property="averageScore" label="Средний балл"/>
 
-        <entityComboBox id="departmentField"
-                        dataContainer="studentDc"
-                        property="department"
-                        itemsContainer="departmentsDc"
-                        label="Кафедра"/>
+            <comboBox id="basisOfLearningField" property="basisOfLearning" label="Основа обучения"
+                      itemsEnum="com.company.diploma.entity.BasisOfLearning"/>
 
-        <numberField id="averageScoreField" property="averageScore" label="Средний балл"/>
+            <textField id="snilsField" property="snils" label="СНИЛС"/>
 
-        <comboBox id="basisOfLearningField"
-                  property="basisOfLearning"
-                  label="Основа обучения"
-                  itemsEnum="com.company.diploma.entity.BasisOfLearning"/>
+            <multiValuePicker id="interestsField"
+                              property="interests"
+                              dataContainer="studentDc"
+                              label="Мои интересы"
+                              colspan="2">
+                <actions>
+                    <action id="multiValueSelect" type="multi_value_select">
+                        <properties>
+                            <property name="javaClass" value="com.company.diploma.entity.Interest"/>
+                        </properties>
+                    </action>
+                    <action id="valueClear" type="value_clear"/>
+                </actions>
+            </multiValuePicker>
 
-        <textField id="snilsField" property="snils" label="СНИЛС"/>
-
-    </formLayout>
-</layout>
+        </formLayout>
+    </layout>
 </view>

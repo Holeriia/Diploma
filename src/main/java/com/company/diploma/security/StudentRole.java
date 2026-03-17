@@ -1,7 +1,6 @@
 package com.company.diploma.security;
 
-import com.company.diploma.entity.Student;
-import com.company.diploma.entity.User;
+import com.company.diploma.entity.*;
 import io.jmix.security.model.EntityAttributePolicyAction;
 import io.jmix.security.model.EntityPolicyAction;
 import io.jmix.security.role.annotation.EntityAttributePolicy;
@@ -25,4 +24,13 @@ public interface StudentRole {
     @EntityAttributePolicy(entityClass = User.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
     @EntityPolicy(entityClass = User.class, actions = EntityPolicyAction.ALL)
     void user();
+
+    @EntityPolicy(entityClass = Group.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
+    void group();
+
+    @EntityPolicy(entityClass = Department.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
+    void department();
+
+    @EntityPolicy(entityClass = Interest.class, actions = EntityPolicyAction.ALL)
+    void interest();
 }
