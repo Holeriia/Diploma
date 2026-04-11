@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <createTable tableName="TOPIC">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TOPIC"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <addColumn tableName="ASSIGNMENT">
+            <column name="TOPIC_ID" type="UUID"/>
+            <column name="WORKSPACE_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="3" author="Diploma">
+        <addColumn tableName="INTEREST">
+            <column name="TOPIC_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="Diploma">
+        <createIndex indexName="IDX_ASSIGNMENT_TOPIC" tableName="ASSIGNMENT">
+            <column name="TOPIC_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="TOPIC_ID" baseTableName="ASSIGNMENT"
+                                 constraintName="FK_ASSIGNMENT_ON_TOPIC" referencedColumnNames="ID"
+                                 referencedTableName="TOPIC"/>
+    </changeSet>
+    <changeSet id="5" author="Diploma">
+        <createIndex indexName="IDX_INTEREST_TOPIC" tableName="INTEREST">
+            <column name="TOPIC_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="TOPIC_ID" baseTableName="INTEREST"
+                                 constraintName="FK_INTEREST_ON_TOPIC" referencedColumnNames="ID"
+                                 referencedTableName="TOPIC"/>
+    </changeSet>
+    <changeSet id="6" author="Diploma">
+        <addForeignKeyConstraint baseColumnNames="WORKSPACE_ID" baseTableName="ASSIGNMENT"
+                                 constraintName="FK_ASSIGNMENT_ON_WORKSPACE" referencedColumnNames="ID"
+                                 referencedTableName="WORKSPACE"/>
+    </changeSet>
+    <changeSet id="7" author="Diploma">
+        <dropColumn columnName="topic" tableName="assignment"/>
+
+        <dropColumn columnName="workspace" tableName="assignment"/>
+    </changeSet>
+</databaseChangeLog>

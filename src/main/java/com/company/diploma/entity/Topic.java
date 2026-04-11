@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "INTEREST")
+@Table(name = "TOPIC")
 @Entity
-public class Interest {
+public class Topic {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
@@ -24,32 +24,18 @@ public class Interest {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @JoinTable(name = "USER_INTEREST_LINK",
-            joinColumns = @JoinColumn(name = "INTEREST_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
-    @ManyToMany
-    private List<User> users;
-
     @JoinTable(name = "TOPIC_INTEREST_LINK",
-            joinColumns = @JoinColumn(name = "INTEREST_ID"),
-            inverseJoinColumns = @JoinColumn(name = "TOPIC_ID"))
+            joinColumns = @JoinColumn(name = "TOPIC_ID"),
+            inverseJoinColumns = @JoinColumn(name = "INTEREST_ID"))
     @ManyToMany
-    private List<Topic> topics;
+    private List<Interest> interests;
 
-    public List<Topic> getTopics() {
-        return topics;
+    public List<Interest> getInterests() {
+        return interests;
     }
 
-    public void setTopics(List<Topic> topics) {
-        this.topics = topics;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setInterests(List<Interest> interests) {
+        this.interests = interests;
     }
 
     public String getDescription() {

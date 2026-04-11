@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <createTable tableName="TOPIC_INTEREST_LINK">
+            <column name="INTEREST_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TOPIC_INTEREST_LINK"/>
+            </column>
+            <column name="TOPIC_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TOPIC_INTEREST_LINK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <addForeignKeyConstraint baseColumnNames="INTEREST_ID" baseTableName="TOPIC_INTEREST_LINK"
+                                 constraintName="FK_TOPINT_ON_INTEREST" referencedColumnNames="ID"
+                                 referencedTableName="INTEREST"/>
+    </changeSet>
+    <changeSet id="3" author="Diploma">
+        <addForeignKeyConstraint baseColumnNames="TOPIC_ID" baseTableName="TOPIC_INTEREST_LINK"
+                                 constraintName="FK_TOPINT_ON_TOPIC" referencedColumnNames="ID"
+                                 referencedTableName="TOPIC"/>
+    </changeSet>
+    <changeSet id="4" author="Diploma">
+        <dropColumn columnName="topic_id" tableName="interest"/>
+    </changeSet>
+</databaseChangeLog>

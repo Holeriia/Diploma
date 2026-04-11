@@ -10,7 +10,9 @@ import java.util.UUID;
 @Table(name = "ASSIGNMENT", indexes = {
         @Index(name = "IDX_ASSIGNMENT_MENTOR", columnList = "MENTOR_ID"),
         @Index(name = "IDX_ASSIGNMENT_MENTEE", columnList = "MENTEE_ID"),
-        @Index(name = "IDX_ASSIGNMENT_REQUEST", columnList = "REQUEST_ID")
+        @Index(name = "IDX_ASSIGNMENT_REQUEST", columnList = "REQUEST_ID"),
+        @Index(name = "IDX_ASSIGNMENT_TOPIC", columnList = "TOPIC_ID"),
+        @Index(name = "IDX_ASSIGNMENT_", columnList = "")
 })
 @Entity
 public class Assignment {
@@ -19,11 +21,13 @@ public class Assignment {
     @Id
     private UUID id;
 
-    @Column(name = "WORKSPACE")
-    private String workspace;
+    @JoinColumn(name = "WORKSPACE_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Workspace workspace;
 
-    @Column(name = "TOPIC")
-    private String topic;
+    @JoinColumn(name = "TOPIC_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Topic topic;
 
     @JoinColumn(name = "MENTOR_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,20 +41,28 @@ public class Assignment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Request request;
 
+    public void setWorkspace(Workspace workspace) {
+        this.workspace = workspace;
+    }
+
+    public Workspace getWorkspace() {
+        return workspace;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
     public Request getRequest() {
         return request;
     }
 
     public void setRequest(Request request) {
         this.request = request;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
     }
 
     public Participant getMentee() {
@@ -67,14 +79,6 @@ public class Assignment {
 
     public void setMentor(Participant mentor) {
         this.mentor = mentor;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
     }
 
     public UUID getId() {
