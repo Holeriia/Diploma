@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://requestCreateView.title"
+      focusComponent="form">
+    <data>
+        <instance id="requestDc"
+                  class="com.company.diploma.entity.Request">
+            <fetchPlan extends="_base">
+                <property name="priorities" fetchPlan="_base">
+                    <property name="participant">
+                        <property name="user" fetchPlan="_instance_name"/>
+                    </property>
+                </property>
+            </fetchPlan>
+            <loader id="requestDl"/>
+            <collection id="prioritiesDc" property="priorities"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="requestDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <textArea id="descriptionField" height="9.5em" property="description"/>
+            <select id="statusField" property="status"/>
+        </formLayout>
+        <h4 text="msg://com.company.diploma.entity/Request.priorities"/>
+        <hbox id="prioritiesButtonsPanel" classNames="buttons-panel">
+            <button action="prioritiesDataGrid.createAction"/>
+            <button action="prioritiesDataGrid.editAction"/>
+            <button action="prioritiesDataGrid.removeAction"/>
+        </hbox>
+        <dataGrid id="prioritiesDataGrid" dataContainer="prioritiesDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="createAction" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="editAction" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="priorityNumber"/>
+                <column property="participant"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+            <button id="startProcessBtn" icon="vaadin:arrow-circle-right" text="start process"/>
+        </hbox>
+    </layout>
+</view>
