@@ -1,9 +1,6 @@
 package com.company.diploma.security;
 
-import com.company.diploma.entity.Request;
-import com.company.diploma.entity.RequestComment;
-import com.company.diploma.entity.RequestPriority;
-import com.company.diploma.entity.Workspace;
+import com.company.diploma.entity.*;
 import io.jmix.security.model.EntityAttributePolicyAction;
 import io.jmix.security.model.EntityPolicyAction;
 import io.jmix.security.role.annotation.EntityAttributePolicy;
@@ -17,7 +14,7 @@ public interface ParticipiantRole {
     String CODE = "participiant-role";
 
     @MenuPolicy(menuIds = "MyWorkspace.list")
-    @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView"})
+    @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView", "Request.create", "Request.detail", "Request.approval", "RequestComment.detail", "RequestPriority.detail", "Participant.list"})
     void screens();
 
     @EntityAttributePolicy(entityClass = Request.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
@@ -35,4 +32,15 @@ public interface ParticipiantRole {
     @EntityAttributePolicy(entityClass = Workspace.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
     @EntityPolicy(entityClass = Workspace.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
     void workspace();
+
+    @EntityAttributePolicy(entityClass = Participant.class, attributes = {"id", "user"}, action = EntityAttributePolicyAction.VIEW)
+    @EntityPolicy(entityClass = Participant.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
+    void participant();
+
+    @EntityAttributePolicy(entityClass = User.class, attributes = {"firstName", "lastName", "patronymic"}, action = EntityAttributePolicyAction.VIEW)
+    @EntityPolicy(entityClass = User.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
+    void user();
+
+    @EntityPolicy(entityClass = Assignment.class, actions = EntityPolicyAction.ALL)
+    void assignment();
 }

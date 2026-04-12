@@ -57,15 +57,23 @@ public class RequestApprovalView extends StandardView {
         );
     }
 
+    private Participant getCurrentParticipant() {
+        return dataManager.load(Participant.class)
+                .query("select p from Participant p where p.user = :user and p.workspace = :workspace")
+                .parameter("user", currentAuthentication.getUser()) // текущий залогиненный юзер
+                .parameter("workspace", requestDc.getItem().getWorkspace()) // воркспейс из текущей заявки
+                .one();
+    }
+
     // --- КНОПКИ ---
 
     @Subscribe("approveBtn")
     protected void onApproveBtnClick(ClickEvent<JmixButton> event) {
-        Participant user = (Participant) currentAuthentication.getUser();
+        Participant participant = getCurrentParticipant();
 
         processFormContext.taskCompletion()
                 .withOutcome("approve")
-                .addProcessVariable("approverUsername", user)
+                .addProcessVariable("approverUsername", participant.getUser())
                 .complete();
 
         closeWithDefaultAction();
@@ -112,7 +120,7 @@ public class RequestApprovalView extends StandardView {
         }
 
         Request request = requestDc.getItem();
-        Participant currentUser = (Participant) currentAuthentication.getUser();
+        Participant currentUser = getCurrentParticipant();
 
         RequestComment comment = dataManager.create(RequestComment.class);
         comment.setRequest(request);

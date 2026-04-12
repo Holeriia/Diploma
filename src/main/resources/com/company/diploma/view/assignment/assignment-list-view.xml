@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://assignmentListView.title"
+      focusComponent="assignmentsDataGrid">
+    <data>
+        <collection id="assignmentsDc"
+                    class="com.company.diploma.entity.Assignment">
+            <fetchPlan extends="_base">
+                <property name="workspace" fetchPlan="_instance_name"/>
+                <property name="topic" fetchPlan="_instance_name"/>
+                <property name="mentor">
+                    <property name="user" fetchPlan="_instance_name"/>
+                </property>
+                <property name="mentee">
+                    <property name="user" fetchPlan="_instance_name"/>
+                </property>
+            </fetchPlan>
+            <loader id="assignmentsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from Assignment e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="assignmentsDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createButton" action="assignmentsDataGrid.createAction"/>
+            <button id="editButton" action="assignmentsDataGrid.editAction"/>
+            <button id="removeButton" action="assignmentsDataGrid.removeAction"/>
+            <simplePagination id="pagination" dataLoader="assignmentsDl"/>
+        </hbox>
+        <dataGrid id="assignmentsDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="assignmentsDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="createAction" type="list_create"/>
+                <action id="editAction" type="list_edit"/>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="workspace"/>
+                <column property="topic"/>
+                <column property="mentor"/>
+                <column property="mentee"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

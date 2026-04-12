@@ -17,6 +17,6 @@
         <item view="Group_.list" title="msg://com.company.diploma.view.group/groupListView.title"/>
         <item view="Workspace.list" title="msg://com.company.diploma.view.workspace/workspaceListView.title"/>
         <item view="Request.list" title="msg://com.company.diploma.view.request/requestListView.title"/>
-        <item view="Participant.list" title="msg://com.company.diploma.view.participant/participantListView.title"/>
+        <item view="Assignment.list" title="msg://com.company.diploma.view.assignment/assignmentListView.title"/>
     </menu>
 </menu-config>
