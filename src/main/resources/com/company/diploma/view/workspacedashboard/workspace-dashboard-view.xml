@@ -11,6 +11,12 @@
                 </query>
             </loader>
         </collection>
+
+        <collection id="tasksDc"
+                    class="io.jmix.bpm.entity.TaskData">
+            <loader id="tasksDl"/>
+        </collection>
+
     </data>
 
     <facets>
@@ -20,7 +26,23 @@
     <layout>
         <tabSheet id="mainTabs" width="100%">
             <tab id="tasksTab" label="Входящие">
-                <vbox/>
+                <vbox>
+                    <h3 text="Мои задачи"/>
+                    <dataGrid id="tasksDataGrid"
+                              width="100%"
+                              minHeight="15em"
+                              dataContainer="tasksDc">
+                        <columns>
+                            <column property="name" header="Задача"/>
+                            <column property="createTime" header="Получена" autoWidth="true"/>
+                        </columns>
+                        <actions>
+                            <!-- действие для открытия формы задачи -->
+                            <action id="openTaskForm" type="list_edit"/>
+                        </actions>
+                    </dataGrid>
+                </vbox>
+
             </tab>
 
             <tab id="requetsTab" label="Заявки">

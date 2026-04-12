@@ -1,22 +1,59 @@
 package com.company.diploma.view.workspacedashboard;
 
 
-import com.company.diploma.entity.Request;
-import com.company.diploma.entity.RequestStatus;
+import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
 import com.company.diploma.view.request.RequestCreateView;
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.router.Route;
+import io.jmix.bpm.entity.TaskData;
+import io.jmix.bpm.entity.UserGroup;
+import io.jmix.bpm.multitenancy.BpmTenantProvider;
+import io.jmix.bpm.service.UserGroupService;
+import io.jmix.bpm.util.FlowableEntitiesConverter;
+import io.jmix.bpmflowui.processform.ProcessFormViews;
+import io.jmix.core.DataManager;
+import io.jmix.core.LoadContext;
+import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.core.usersubstitution.CurrentUserSubstitution;
+import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.action.list.EditAction;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
+import io.jmix.flowui.kit.component.button.JmixButton;
+import io.jmix.flowui.model.CollectionContainer;
+import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.view.*;
+import org.flowable.engine.TaskService;
+import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.UUID;
 
 @Route(value = "workspace-dashboard-view", layout = MainView.class)
 @ViewController(id = "WorkspaceDashboardView")
 @ViewDescriptor(path = "workspace-dashboard-view.xml")
 public class WorkspaceDashboardView extends StandardView {
+
+    private UUID workspaceId;
+
+    @Subscribe
+    public void onQueryParametersChange(QueryParametersChangeEvent event) {
+
+        List<String> workspaceIds = event.getQueryParameters()
+                .getParameters()
+                .get("workspaceId");
+
+        if (workspaceIds == null || workspaceIds.isEmpty()) {
+            return;
+        }
+
+        workspaceId = UUID.fromString(workspaceIds.get(0));
+    }
+
 
     @ViewComponent
     private DataGrid<Request> requestsGrid;
@@ -26,6 +63,7 @@ public class WorkspaceDashboardView extends StandardView {
 
     @Autowired
     private ViewNavigators viewNavigators;
+
 
     @Subscribe("requestsGrid.editAction")
     public void onRequestsGridEditActionPerformed(ActionPerformedEvent event) {
@@ -43,6 +81,132 @@ public class WorkspaceDashboardView extends StandardView {
         } else {
             // Для остальных статусов - стандартное поведение list_edit
             editAction.execute();
+        }
+    }
+
+    @Autowired
+    private DataManager dataManager;
+
+    @Autowired
+    private CurrentAuthentication currentAuthentication;
+
+
+    @Install(to = "requestsGrid.createAction", subject = "initializer")
+    private void requestsGridCreateActionInitializer(Request request) {
+
+        // 1. workspace
+        Workspace workspace = dataManager.load(Workspace.class)
+                .id(workspaceId)
+                .one();
+        request.setWorkspace(workspace);
+
+        // 2. текущий пользователь → participant
+        User user = (User) currentAuthentication.getUser();
+
+        Participant participant = dataManager.load(Participant.class)
+                .query("""
+                    select p from Participant p
+                    where p.user = :user
+                      and p.workspace = :workspace
+                    """)
+                .parameter("user", user)
+                .parameter("workspace", workspace)
+                .one();
+
+        // 3. автозаполнение
+        request.setInitiator(participant);
+        request.setStatus(RequestStatus.DRAFT);
+    }
+
+
+    @ViewComponent
+    private CollectionLoader<TaskData> tasksDl;
+
+    @ViewComponent
+    private CollectionContainer<TaskData> tasksDc;
+
+    @ViewComponent
+    private DataGrid<TaskData> tasksDataGrid;
+
+    // Flowable & BPM API
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private FlowableEntitiesConverter entitiesConverter;
+    @Autowired(required = false)
+    private BpmTenantProvider bpmTenantProvider;
+    @Autowired
+    private UserGroupService userGroupService;
+    @Autowired
+    private CurrentUserSubstitution currentUserSubstitution;
+
+    private String currentUserName;
+    private List<String> userGroupCodes;
+
+    @Subscribe
+    public void onBeforeShow(BeforeShowEvent event) {
+        currentUserName = currentUserSubstitution.getEffectiveUser().getUsername();
+        userGroupCodes = userGroupService.getUserGroups(currentUserName)
+                .stream()
+                .map(UserGroup::getCode)
+                .toList();
+
+        tasksDl.load();
+    }
+
+    @Install(to = "tasksDl", target = Target.DATA_LOADER)
+    private List<TaskData> tasksDlLoadDelegate(LoadContext<TaskData> loadContext) {
+        TaskQuery taskQuery = taskService.createTaskQuery().active();
+        addAssignmentCondition(taskQuery);
+        long count = taskQuery.count();
+        taskQuery.orderByTaskCreateTime().desc();
+        List<Task> tasks = taskQuery.list();
+
+        List<TaskData> result = tasks.stream()
+                .map(entitiesConverter::createTaskData)
+                .toList();
+
+        return result;
+    }
+
+    @Autowired
+    private ProcessFormViews processFormViews;
+
+    @Subscribe("tasksDataGrid.openTaskForm")
+    private void onTasksDataGridOpenTaskForm(ActionPerformedEvent event) {
+        TaskData selected = tasksDc.getItemOrNull();
+        if (selected == null) {
+            return;
+        }
+
+        Task task = taskService.createTaskQuery()
+                .taskId(selected.getId())
+                .singleResult();
+
+        if (task == null) {
+            return;
+        }
+
+        processFormViews.openTaskProcessForm(task, this, dialog ->
+                dialog.addAfterCloseListener(afterClose -> tasksDl.load())
+        );
+    }
+
+    private void addAssignmentCondition(TaskQuery taskQuery) {
+        // Если есть группы, используем блок OR, чтобы объединить пользователя и его группы
+        if (userGroupCodes != null && !userGroupCodes.isEmpty()) {
+            taskQuery.or()
+                    .taskCandidateOrAssigned(currentUserName)
+                    .taskCandidateGroupIn(userGroupCodes)
+                    .endOr();
+        } else {
+            // Если групп нет, OR не нужен — просто ищем задачи пользователя
+            taskQuery.taskCandidateOrAssigned(currentUserName);
+        }
+
+        // Условие тенента всегда идет отдельно (вне блока OR)
+        if (bpmTenantProvider != null && bpmTenantProvider.isMultitenancyActive()) {
+            taskQuery.taskTenantId(bpmTenantProvider.getCurrentUserTenantId());
         }
     }
 }

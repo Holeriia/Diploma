@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://requestApprovalView.title">
+
+    <data>
+        <instance id="requestDc"
+                  class="com.company.diploma.entity.Request">
+            <fetchPlan>
+                <property name="initiator">
+                    <property name="user" fetchPlan="_instance_name"/>
+                </property>
+                <property name="name"/>
+                <property name="description"/>
+                <property name="status"/>
+                <property name="comments" fetchPlan="_base">
+                    <property name="author" fetchPlan="_instance_name"/>
+                </property>
+            </fetchPlan>
+
+            <loader id="requestDl"/>
+            <collection id="commentsDc" property="comments"/>
+        </instance>
+    </data>
+
+    <layout spacing="true">
+
+        <formLayout>
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+            </responsiveSteps>
+
+            <textField id="initiatorField"
+                       label="Инициатор"
+                       dataContainer="requestDc"
+                       property="initiator.user"/>
+
+            <textField id="nameField"
+                       label="Название"
+                       dataContainer="requestDc"
+                       property="name"/>
+
+            <textArea id="descriptionField"
+                      label="Описание"
+                      dataContainer="requestDc"
+                      property="description"
+                      height="8em"/>
+
+            <h4 text="Комментарии"/>
+            <dataGrid id="commentsDataGrid"
+                      dataContainer="commentsDc"
+                      width="100%"
+                      minHeight="20em">
+
+                <actions>
+                    <action id="createAction" type="list_create">
+                        <properties>
+                            <property name="openMode" value="DIALOG"/>
+                        </properties>
+                    </action>
+                    <action id="editAction" type="list_edit">
+                        <properties>
+                            <property name="openMode" value="DIALOG"/>
+                        </properties>
+                    </action>
+                    <action id="removeAction" type="list_remove"/>
+                </actions>
+
+                <columns>
+                    <column property="message"/>
+                    <column property="createdAt"/>
+                    <column property="author"/>
+                </columns>
+            </dataGrid>
+
+            <hbox width="100%" alignItems="CENTER" spacing="true">
+
+                <textArea
+                        id="commentField"
+                        label="Комментарий"
+                        width="100%"
+                        height="6em"/>
+
+                <button
+                        id="addCommentBtn"
+                        icon="vaadin:arrow-forward"
+                        themeNames="icon"/>
+            </hbox>
+
+        </formLayout>
+
+        <hbox justifyContent="END" spacing="true">
+
+            <button
+                    id="approveBtn"
+                    text="Approve"
+                    themeNames="primary"/>
+
+            <button
+                    id="rejectBtn"
+                    text="Reject"
+                    themeNames="error"/>
+
+            <button
+                    id="commentBtn"
+                    text="returnRequest"
+                    icon="vaadin:arrow-backward"/>
+
+        </hbox>
+
+    </layout>
+</view>
