@@ -5,6 +5,7 @@ import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
 import com.company.diploma.view.request.RequestCreateView;
 import com.company.diploma.view.request.RequestDetailView;
+import com.company.diploma.view.topicassignment.TopicAssignmentView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -223,30 +224,6 @@ public class WorkspaceDashboardView extends StandardView {
     @Autowired
     private UiComponents uiComponents;
 
-    @Supply(to = "assignmentsGrid.requestColumn", subject = "renderer")
-    private Renderer<Assignment> assignmentsGridRequestColumnRenderer() {
-        return new ComponentRenderer<>(assignment -> {
-            // Создаем кнопку через UiComponents
-            JmixButton button = uiComponents.create(JmixButton.class);
-            button.setText("Показать");
-
-            button.addClickListener(clickEvent -> {
-                openRequestDetail(assignment.getRequest());
-            });
-
-            button.setEnabled(assignment.getRequest() != null);
-            return button;
-        });
-    }
-
-    private void openRequestDetail(Request request) {
-        if (request != null) {
-            dialogWindows.detail(this, Request.class)
-                    .editEntity(request)
-                    .withViewClass(RequestDetailView.class)
-                    .open();
-        }
-    }
 
     @Supply(to = "assignmentsGrid.topicColumn", subject = "renderer")
     private Renderer<Assignment> assignmentsGridTopicColumnRenderer() {
@@ -280,7 +257,10 @@ public class WorkspaceDashboardView extends StandardView {
     }
 
     private void openTopicSelection(Assignment assignment) {
-        // Логика вызова диалога выбора темы
+        dialogWindows.detail(this, Assignment.class)
+                .withViewId("TopicAssignmentView")
+                .editEntity(assignment)
+                .open();
     }
 
     @Supply(to = "topicsGrid.interestsColumn", subject = "renderer")

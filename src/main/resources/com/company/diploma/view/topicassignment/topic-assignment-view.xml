@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://topicAssignmentView.title">
+    <data>
+        <instance id="assignmentDc"
+                  class="com.company.diploma.entity.Assignment">
+            <fetchPlan extends="_base">
+                <property name="mentor" fetchPlan="_base"/>
+                <property name="mentee" fetchPlan="_base"/>
+                <property name="request" fetchPlan="_base"/>
+                <property name="topic" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="assignmentDl"/>
+        </instance>
+
+        <collection id="topicsDc" class="com.company.diploma.entity.Topic">
+            <fetchPlan extends="_base"/>
+            <loader id="topicsDl">
+                <query>
+                    <![CDATA[select e from Topic e where e.status = 'ACTIVE']]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout>
+        <formLayout id="form" dataContainer="assignmentDc">
+            <textField id="mentorField" property="mentor" readOnly="true" label="Ментор"/>
+            <textField id="menteeField" property="mentee" readOnly="true" label="Менти"/>
+
+            <hbox alignItems="END" width="100%">
+                <textField id="requestField" property="request" readOnly="true" label="Заявка" width="100%"/>
+                <button id="showRequestBtn" text="Открыть" icon="EXTERNAL_LINK"/>
+            </hbox>
+
+            <entityComboBox id="topicField"
+                            property="topic"
+                            itemsContainer="topicsDc"
+                            label="Выбрать существующую тему"/>
+
+            <textField id="newTopicNameField"
+                       label="Название новой темы"
+                       helperText="Заполните, если нужной темы нет в списке выше"/>
+        </formLayout>
+
+        <hbox id="detailActions" classNames="pt-m">
+            <button id="saveAndSendBtn" text="ОК и отправить на согласование" themeNames="primary"/>
+            <button id="closeBtn" text="Закрыть"/>
+        </hbox>
+    </layout>
+</view>

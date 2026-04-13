@@ -114,7 +114,6 @@
                             <column property="mentor" header="Ментор"/>
                             <column property="mentee" header="Менти"/>
                             <column key="topicColumn" header="Тема"/>
-                            <column key="requestColumn" header="Заявка"/>
                         </columns>
                     </dataGrid>
 
