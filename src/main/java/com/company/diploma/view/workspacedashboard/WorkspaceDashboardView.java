@@ -4,7 +4,11 @@ package com.company.diploma.view.workspacedashboard;
 import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
 import com.company.diploma.view.request.RequestCreateView;
+import com.company.diploma.view.request.RequestDetailView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.Route;
 import io.jmix.bpm.entity.TaskData;
 import io.jmix.bpm.entity.UserGroup;
@@ -17,6 +21,7 @@ import io.jmix.core.LoadContext;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.DialogWindows;
+import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.action.list.EditAction;
 import io.jmix.flowui.component.grid.DataGrid;
@@ -208,5 +213,72 @@ public class WorkspaceDashboardView extends StandardView {
         if (bpmTenantProvider != null && bpmTenantProvider.isMultitenancyActive()) {
             taskQuery.taskTenantId(bpmTenantProvider.getCurrentUserTenantId());
         }
+    }
+
+
+    @Autowired
+    private DialogWindows dialogWindows;
+
+    @Autowired
+    private UiComponents uiComponents;
+
+    @Supply(to = "assignmentsGrid.requestColumn", subject = "renderer")
+    private Renderer<Assignment> assignmentsGridRequestColumnRenderer() {
+        return new ComponentRenderer<>(assignment -> {
+            // Создаем кнопку через UiComponents
+            JmixButton button = uiComponents.create(JmixButton.class);
+            button.setText("Показать");
+
+            button.addClickListener(clickEvent -> {
+                openRequestDetail(assignment.getRequest());
+            });
+
+            button.setEnabled(assignment.getRequest() != null);
+            return button;
+        });
+    }
+
+    private void openRequestDetail(Request request) {
+        if (request != null) {
+            dialogWindows.detail(this, Request.class)
+                    .editEntity(request)
+                    .withViewClass(RequestDetailView.class)
+                    .open();
+        }
+    }
+
+    @Supply(to = "assignmentsGrid.topicColumn", subject = "renderer")
+    private Renderer<Assignment> assignmentsGridTopicColumnRenderer() {
+        return new ComponentRenderer<>(assignment -> {
+            // 1. Проверяем роль текущего пользователя
+            User currentUser = (User) currentAuthentication.getUser();
+            boolean isTeacher = UserRole.TEACHER.equals(currentUser.getUserRole());
+
+            // 2. Логика отображения
+            if (assignment.getTopic() == null) {
+                if (isTeacher) {
+                    // Создаем кнопку "Назначить"
+                    JmixButton assignBtn = uiComponents.create(JmixButton.class);
+                    assignBtn.setText("Назначить");
+//                    assignBtn.addThemeNames("tertiary-inline"); // делаем аккуратной
+
+                    assignBtn.addClickListener(event -> {
+                        // Здесь ваша логика открытия выбора темы
+                        openTopicSelection(assignment);
+                    });
+                    return assignBtn;
+                } else {
+                    // Если не учитель и темы нет — пишем заглушку
+                    return new Span("Не назначена");
+                }
+            } else {
+                // Если тема уже есть — просто выводим её название
+                return new Span(assignment.getTopic().getName());
+            }
+        });
+    }
+
+    private void openTopicSelection(Assignment assignment) {
+        // Логика вызова диалога выбора темы
     }
 }

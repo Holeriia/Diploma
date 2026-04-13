@@ -17,6 +17,18 @@
             <loader id="tasksDl"/>
         </collection>
 
+        <collection id="assignmentsDc"
+                    class="com.company.diploma.entity.Assignment">
+            <fetchPlan extends="_base">
+            </fetchPlan>
+            <loader id="assignmentsDl">
+                <query>
+                    <![CDATA[select e from Assignment e]]>
+                </query>
+            </loader>
+        </collection>
+
+
     </data>
 
     <facets>
@@ -79,6 +91,21 @@
 
                     </dataGrid>
 
+                </vbox>
+            </tab>
+            <tab id="assignmentsTab" label="Назначения">
+                <vbox classNames="p-m">
+                    <h3 text="Мои назначения"/>
+                    <dataGrid id="assignmentsGrid"
+                              dataContainer="assignmentsDc"
+                              width="100%">
+                        <columns>
+                            <column property="mentor" header="Ментор"/>
+                            <column property="mentee" header="Менти"/>
+                            <column key="topicColumn" header="Тема"/>
+                            <column key="requestColumn" header="Заявка"/>
+                        </columns>
+                    </dataGrid>
                 </vbox>
             </tab>
         </tabSheet>
