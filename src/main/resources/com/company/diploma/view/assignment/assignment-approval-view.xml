@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="Утверждение назначения темы"
+      focusComponent="form">
+    <data>
+        <instance id="assignmentDc"
+                  class="com.company.diploma.entity.Assignment">
+            <fetchPlan extends="_base">
+                <property name="topic" fetchPlan="_instance_name"/>
+                <property name="mentor" fetchPlan="_instance_name"/>
+                <property name="mentee" fetchPlan="_instance_name"/>
+            </fetchPlan>
+            <loader id="assignmentDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout>
+        <formLayout id="form" dataContainer="assignmentDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+            </responsiveSteps>
+            <textField id="topicField" property="topic" label="Тема" readOnly="true"/>
+            <textField id="mentorField" property="mentor" label="Ментор" readOnly="true"/>
+            <textField id="menteeField" property="mentee" label="Менти" readOnly="true"/>
+        </formLayout>
+
+        <hbox id="actionsPanel" classNames="pt-m">
+            <button id="approveBtn" text="Утвердить" themeNames="primary,success" icon="CHECK"/>
+            <button id="rejectBtn" text="Вернуть" themeNames="error" icon="ARROW_BACKWARD"/>
+        </hbox>
+    </layout>
+</view>

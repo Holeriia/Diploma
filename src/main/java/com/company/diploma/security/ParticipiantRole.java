@@ -14,7 +14,7 @@ public interface ParticipiantRole {
     String CODE = "participiant-role";
 
     @MenuPolicy(menuIds = "MyWorkspace.list")
-    @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView", "Request.create", "Request.detail", "Request.approval", "RequestComment.detail", "RequestPriority.detail", "Participant.list"})
+    @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView", "Request.create", "Request.detail", "Request.approval", "RequestComment.detail", "RequestPriority.detail", "Participant.list", "AssignmentApprovalView", "Assignment.list", "Assignment.detail", "Topic.list", "Topic.detail", "Interest.detail", "Interest.list", "TopicAssignmentView"})
     void screens();
 
     @EntityAttributePolicy(entityClass = Request.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
@@ -41,6 +41,15 @@ public interface ParticipiantRole {
     @EntityPolicy(entityClass = User.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
     void user();
 
+    @EntityAttributePolicy(entityClass = Assignment.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
     @EntityPolicy(entityClass = Assignment.class, actions = EntityPolicyAction.ALL)
     void assignment();
+
+    @EntityAttributePolicy(entityClass = Topic.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
+    @EntityPolicy(entityClass = Topic.class, actions = EntityPolicyAction.ALL)
+    void topic();
+
+    @EntityAttributePolicy(entityClass = Interest.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
+    @EntityPolicy(entityClass = Interest.class, actions = EntityPolicyAction.ALL)
+    void interest();
 }

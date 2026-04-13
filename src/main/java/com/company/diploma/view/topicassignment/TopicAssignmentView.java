@@ -1,5 +1,6 @@
 package com.company.diploma.view.topicassignment;
 
+import com.company.diploma.app.AssignmentProcessService;
 import com.company.diploma.entity.Assignment;
 import com.company.diploma.entity.Request;
 import com.company.diploma.entity.Topic;
@@ -24,9 +25,6 @@ public class TopicAssignmentView extends StandardDetailView<Assignment> {
     @ViewComponent
     private TypedTextField<String> newTopicNameField;
 
-    @ViewComponent
-    private EntityComboBox<Topic> topicField;
-
     @Autowired
     private DataManager dataManager;
 
@@ -45,6 +43,8 @@ public class TopicAssignmentView extends StandardDetailView<Assignment> {
                     .open();
         }
     }
+    @Autowired
+    private AssignmentProcessService assignmentProcessService;
 
     @Subscribe(id = "saveAndSendBtn")
     public void onSaveAndSendBtnClick(final ClickEvent<JmixButton> event) {
@@ -68,11 +68,15 @@ public class TopicAssignmentView extends StandardDetailView<Assignment> {
             return;
         }
 
+        // 1. Сохраняем основную сущность
+        Assignment assignment = getEditedEntity();
+        dataManager.save(assignment);
+
+        // 2. Запускаем процесс через сервис
+        assignmentProcessService.startProcess(assignment);
+
         closeWithSave();
 
-        notifications.create("Назначено и отправлено на согласование")
-                .withType(Notifications.Type.SUCCESS)
-                .show();
     }
 
     @Subscribe(id = "closeBtn")
