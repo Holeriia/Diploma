@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Route(value = "workspace-dashboard-view", layout = MainView.class)
 @ViewController(id = "WorkspaceDashboardView")
@@ -280,5 +281,22 @@ public class WorkspaceDashboardView extends StandardView {
 
     private void openTopicSelection(Assignment assignment) {
         // Логика вызова диалога выбора темы
+    }
+
+    @Supply(to = "topicsGrid.interestsColumn", subject = "renderer")
+    private Renderer<Topic> topicsGridInterestsColumnRenderer() {
+        return new ComponentRenderer<>(topic -> {
+            if (topic.getInterests() == null || topic.getInterests().isEmpty()) {
+                return new Span("-");
+            }
+            // Собираем названия интересов через запятую
+            String interestsString = topic.getInterests().stream()
+                    .map(Interest::getName)
+                    .collect(Collectors.joining(", "));
+
+            Span span = new Span(interestsString);
+            span.getElement().getStyle().set("font-size", "var(--lumo-font-size-s)");
+            return span;
+        });
     }
 }

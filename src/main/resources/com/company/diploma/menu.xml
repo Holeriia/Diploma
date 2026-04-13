@@ -8,7 +8,7 @@
         <item view="MyWorkspace.list" title="msg://com.company.diploma.view.workspace/myWorkspaceListView.title"/>
     </menu>
 
-    <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="true">
+    <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="false">
         <item view="User.list" title="msg://com.company.diploma.view.user/UserListView.title"/>
         <item view="Department.list" title="msg://com.company.diploma.view.department/departmentListView.title"/>
         <item view="Degree.list" title="msg://com.company.diploma.view.degree/degreeListView.title"/>
@@ -18,5 +18,6 @@
         <item view="Workspace.list" title="msg://com.company.diploma.view.workspace/workspaceListView.title"/>
         <item view="Request.list" title="msg://com.company.diploma.view.request/requestListView.title"/>
         <item view="Assignment.list" title="msg://com.company.diploma.view.assignment/assignmentListView.title"/>
+        <item view="Topic.list" title="msg://com.company.diploma.view.topic/topicListView.title"/>
     </menu>
 </menu-config>

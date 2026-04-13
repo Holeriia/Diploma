@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "TOPIC")
+@Table(name = "TOPIC", indexes = {
+        @Index(name = "IDX_TOPIC_AUTHOR", columnList = "AUTHOR_ID")
+})
 @Entity
 public class Topic {
     @JmixGeneratedValue
@@ -24,11 +26,34 @@ public class Topic {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @JoinColumn(name = "AUTHOR_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Participant author;
+
     @JoinTable(name = "TOPIC_INTEREST_LINK",
-            joinColumns = @JoinColumn(name = "TOPIC_ID"),
-            inverseJoinColumns = @JoinColumn(name = "INTEREST_ID"))
+            joinColumns = @JoinColumn(name = "TOPIC_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "INTEREST_ID", referencedColumnName = "ID"))
     @ManyToMany
     private List<Interest> interests;
+
+    @Column(name = "STATUS")
+    private String status;
+
+    public Participant getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Participant author) {
+        this.author = author;
+    }
+
+    public TopicStatus getStatus() {
+        return status == null ? null : TopicStatus.fromId(status);
+    }
+
+    public void setStatus(TopicStatus status) {
+        this.status = status == null ? null : status.getId();
+    }
 
     public List<Interest> getInterests() {
         return interests;

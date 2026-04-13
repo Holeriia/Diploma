@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://topicDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="topicDc"
+                  class="com.company.diploma.entity.Topic">
+            <fetchPlan extends="_base">
+                <property name="author" fetchPlan="_instance_name"/>
+                <property name="interests">
+                    <property name="name"/>
+                </property>
+            </fetchPlan>
+            <loader id="topicDl"/>
+            <collection id="interestsDc" property="interests"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="topicDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <textField id="descriptionField" property="description"/>
+            <entityPicker id="authorField" property="author">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <select id="statusField" property="status"/>
+        </formLayout>
+        <h4 text="msg://com.company.diploma.entity/Topic.interests"/>
+        <hbox id="interestsButtonsPanel" classNames="buttons-panel">
+            <button action="interestsDataGrid.addAction"/>
+            <button action="interestsDataGrid.excludeAction"/>
+        </hbox>
+        <dataGrid id="interestsDataGrid" dataContainer="interestsDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="addAction" type="list_add"/>
+                <action id="excludeAction" type="list_exclude"/>
+            </actions>
+            <columns>
+                <column property="name"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <addColumn tableName="TOPIC">
+            <column name="AUTHOR_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <createIndex indexName="IDX_TOPIC_AUTHOR" tableName="TOPIC">
+            <column name="AUTHOR_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="AUTHOR_ID" baseTableName="TOPIC" constraintName="FK_TOPIC_ON_AUTHOR"
+                                 referencedColumnNames="ID" referencedTableName="PARTICIPANT"/>
+    </changeSet>
+</databaseChangeLog>

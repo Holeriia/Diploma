@@ -28,6 +28,17 @@
             </loader>
         </collection>
 
+        <collection id="topicsDc"
+                    class="com.company.diploma.entity.Topic">
+            <fetchPlan extends="_base">
+                <property name="interests" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="topicsDl">
+                <query>
+                    <![CDATA[select e from Topic e]]>
+                </query>
+            </loader>
+        </collection>
 
     </data>
 
@@ -93,7 +104,7 @@
 
                 </vbox>
             </tab>
-            <tab id="assignmentsTab" label="Назначения">
+            <tab id="assignmentsTab" label="Назначения тем">
                 <vbox classNames="p-m">
                     <h3 text="Мои назначения"/>
                     <dataGrid id="assignmentsGrid"
@@ -106,7 +117,40 @@
                             <column key="requestColumn" header="Заявка"/>
                         </columns>
                     </dataGrid>
+
+
+                    <h3 text="Мои темы"/>
+
+                    <hbox classNames="buttons-panel">
+                        <button action="topicsGrid.create"/>
+                        <button action="topicsGrid.edit"/>
+                        <button action="topicsGrid.remove"/>
+                    </hbox>
+
+                    <dataGrid id="topicsGrid"
+                              dataContainer="topicsDc"
+                              width="100%">
+                        <actions>
+                            <action id="create" type="list_create">
+                                <properties>
+                                    <property name="openMode" value="DIALOG"/>
+                                </properties>
+                            </action>
+                            <action id="edit" type="list_edit">
+                                <properties>
+                                    <property name="openMode" value="DIALOG"/>
+                                </properties>
+                            </action>
+                            <action id="remove" type="list_remove"/>
+                        </actions>
+                        <columns>
+                            <column property="name"/>
+                            <column property="status"/>
+                            <column key="interestsColumn" header="Интересы" width="20em"/>
+                        </columns>
+                    </dataGrid>
                 </vbox>
+
             </tab>
         </tabSheet>
     </layout>
