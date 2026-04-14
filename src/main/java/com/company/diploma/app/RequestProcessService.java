@@ -48,6 +48,7 @@ public class RequestProcessService {
         variables.put("requestId", req.getId());
         variables.put("assigneeUsername", firstAssigneeUser);
         variables.put("previousAssignee", initiatorUser);
+        variables.put("currentPriorityIndex", 1);
 
         runtimeService.startProcessInstanceByKey(
                 "request-approval",
