@@ -20,6 +20,8 @@
         <collection id="assignmentsDc"
                     class="com.company.diploma.entity.Assignment">
             <fetchPlan extends="_base">
+                <property name="mentor" fetchPlan="_base"/>
+                <property name="mentee" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="assignmentsDl">
                 <query>
@@ -114,6 +116,7 @@
                             <column property="mentor" header="Ментор"/>
                             <column property="mentee" header="Менти"/>
                             <column key="topicColumn" header="Тема"/>
+                            <column property="status"/>
                         </columns>
                     </dataGrid>
 

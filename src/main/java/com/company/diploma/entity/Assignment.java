@@ -11,8 +11,7 @@ import java.util.UUID;
         @Index(name = "IDX_ASSIGNMENT_MENTOR", columnList = "MENTOR_ID"),
         @Index(name = "IDX_ASSIGNMENT_MENTEE", columnList = "MENTEE_ID"),
         @Index(name = "IDX_ASSIGNMENT_REQUEST", columnList = "REQUEST_ID"),
-        @Index(name = "IDX_ASSIGNMENT_TOPIC", columnList = "TOPIC_ID"),
-        @Index(name = "IDX_ASSIGNMENT_", columnList = "")
+        @Index(name = "IDX_ASSIGNMENT_TOPIC", columnList = "TOPIC_ID")
 })
 @Entity
 public class Assignment {
@@ -40,6 +39,17 @@ public class Assignment {
     @JoinColumn(name = "REQUEST_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Request request;
+
+    @Column(name = "STATUS")
+    private String status;
+
+    public AssignmentStatus getStatus() {
+        return status == null ? null : AssignmentStatus.fromId(status);
+    }
+
+    public void setStatus(AssignmentStatus status) {
+        this.status = status == null ? null : status.getId();
+    }
 
     public void setWorkspace(Workspace workspace) {
         this.workspace = workspace;

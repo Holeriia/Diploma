@@ -1,7 +1,7 @@
 package com.company.diploma.app;
 
 import com.company.diploma.entity.Assignment;
-import com.company.diploma.entity.Participant;
+import com.company.diploma.entity.AssignmentStatus;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
 import org.flowable.engine.RuntimeService;
@@ -23,28 +23,15 @@ public class AssignmentProcessService {
     }
 
     public void startProcess(Assignment assignment) {
-        // Загружаем назначение с необходимым планом (нужны менти и ментор для переменных процесса)
-        Assignment entity = dataManager.load(Assignment.class)
-                .id(assignment.getId())
-                .fetchPlan(plan -> {
-                    plan.addFetchPlan(FetchPlan.BASE);
-                    // Важно: загружаем участников и ИХ пользователей с полем username
-                    plan.add("mentee", sp -> sp.add("user", up -> up.add("username")));
-//                    plan.add("mentor", sp -> sp.add("user", up -> up.add("username")));
-                    plan.add("workspace", FetchPlan.BASE);
-                })
-                .one();
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put("assignmentId", entity.getId());
-        variables.put("menteeUsername", entity.getMentee().getUser());
+        variables.put("assignmentId", assignment.getId());
+        variables.put("menteeUsername", assignment.getMentee().getUser());
 
-        // Запуск процесса по ключу
         runtimeService.startProcessInstanceByKey(
                 "assignment-approval",
-                entity.getId().toString(),
+                assignment.getId().toString(),
                 variables
         );
-
     }
 }

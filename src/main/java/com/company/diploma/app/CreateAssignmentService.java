@@ -72,6 +72,7 @@ public class CreateAssignmentService implements JavaDelegate {
         Assignment assignment = dataManager.create(Assignment.class);
         assignment.setRequest(request);
         assignment.setWorkspace(request.getWorkspace());
+        assignment.setStatus(AssignmentStatus.NOT_APPROVED);
 
         Participant initiatorParticipant = request.getInitiator();
         User initiatorUser = initiatorParticipant.getUser();

@@ -1,10 +1,7 @@
 package com.company.diploma.view.topicassignment;
 
 import com.company.diploma.app.AssignmentProcessService;
-import com.company.diploma.entity.Assignment;
-import com.company.diploma.entity.Request;
-import com.company.diploma.entity.Topic;
-import com.company.diploma.entity.TopicStatus;
+import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.DataManager;
@@ -70,6 +67,7 @@ public class TopicAssignmentView extends StandardDetailView<Assignment> {
 
         // 1. Сохраняем основную сущность
         Assignment assignment = getEditedEntity();
+        assignment.setStatus(AssignmentStatus.FOR_APPROVAL);
         dataManager.save(assignment);
 
         // 2. Запускаем процесс через сервис
