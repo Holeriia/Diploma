@@ -6,6 +6,7 @@
         <item view="StudentProfileView" title="msg://com.company.diploma.view.studentprofile/studentProfileView.title"/>
         <item view="TeacherProfileView" title="msg://com.company.diploma.view.teacherprofile/teacherProfileView.title"/>
         <item view="MyWorkspace.list" title="msg://com.company.diploma.view.workspace/myWorkspaceListView.title"/>
+        <item view="HeadDasboardView" title="msg://com.company.diploma.view.headdasboard/headDasboardView.title"/>
     </menu>
 
     <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="false">

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://headDasboardView.title">
+    <data>
+        <collection id="workspacesDc"
+                    class="com.company.diploma.entity.Workspace">
+            <fetchPlan extends="_base"/>
+            <loader id="workspacesDl">
+                <query>
+                    <![CDATA[select e from Workspace e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="tasksDc"
+                    class="io.jmix.bpm.entity.TaskData">
+            <loader id="tasksDl"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout expand="tabSheet">
+        <hbox id="topPanel" spacing="true" alignItems="END" classNames="pb-m">
+            <entityComboBox id="workspaceField"
+                            label="Выбор пространства"
+                            metaClass="Workspace"
+                            itemsContainer="workspacesDc"
+                            width="300px"/>
+            <button id="applyBtn"
+                    text="Применить"
+                    themeNames="primary"/>
+        </hbox>
+
+        <tabSheet id="tabSheet" width="100%">
+            <tab id="tasksTab" label="Входящие">
+                <vbox>
+                    <h3 text="Мои задачи"/>
+                    <dataGrid id="tasksDataGrid"
+                              width="100%"
+                              minHeight="15em"
+                              dataContainer="tasksDc">
+                        <columns>
+                            <column property="name" header="Задача"/>
+                            <column property="createTime" header="Получена" autoWidth="true"/>
+                        </columns>
+                        <actions>
+                            <!-- действие для открытия формы задачи -->
+                            <action id="openTaskForm" type="list_edit"/>
+                        </actions>
+                    </dataGrid>
+                </vbox>
+            </tab>
+            <tab id="personalDataTab" label="Личные данные">
+                <vbox padding="true">
+                    <span text="Здесь будут личные данные студентов"/>
+                </vbox>
+            </tab>
+            <tab id="statisticsTab" label="Статистика">
+                <vbox padding="true">
+                    <span text="Здесь будет таблица распределения по преподавателям"/>
+                </vbox>
+            </tab>
+            <tab id="assignmentsTab" label="Назначения">
+                <vbox padding="true">
+                    <span text="Список тем с преподавателями"/>
+                </vbox>
+            </tab>
+        </tabSheet>
+    </layout>
+</view>
