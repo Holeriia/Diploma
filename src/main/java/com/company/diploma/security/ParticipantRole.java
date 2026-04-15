@@ -9,9 +9,9 @@ import io.jmix.security.role.annotation.ResourceRole;
 import io.jmix.securityflowui.role.annotation.MenuPolicy;
 import io.jmix.securityflowui.role.annotation.ViewPolicy;
 
-@ResourceRole(name = "ParticipiantRole", code = ParticipiantRole.CODE)
-public interface ParticipiantRole {
-    String CODE = "participiant-role";
+@ResourceRole(name = "ParticipantRole", code = ParticipantRole.CODE)
+public interface ParticipantRole {
+    String CODE = "participant-role";
 
     @MenuPolicy(menuIds = "MyWorkspace.list")
     @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView", "Request.create", "Request.detail", "Request.approval", "RequestComment.detail", "RequestPriority.detail", "Participant.list", "AssignmentApprovalView", "Assignment.list", "Assignment.detail", "Topic.list", "Topic.detail", "Interest.detail", "Interest.list", "TopicAssignmentView"})

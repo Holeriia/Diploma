@@ -214,7 +214,7 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
                 "bpm-process-task-performer",
                 "student-role",
                 "ui-minimal",
-                "participiant-role"
+                "participant-role"
         );
 
         for (String roleCode : rolesToAssign) {
