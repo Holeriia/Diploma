@@ -3,18 +3,52 @@
       focusComponent="login"
       title="msg://LoginView.title">
     <layout justifyContent="CENTER" alignItems="CENTER" classNames="jmix-login-main-layout">
-        <loginForm id="login"
-                   forgotPasswordButtonVisible="false">
-            <form title="msg://loginForm.headerTitle"
-                  username="msg://loginForm.username"
-                  password="msg://loginForm.password"
-                  rememberMe="msg://loginForm.rememberMe"
-                  submit="msg://loginForm.submit"
-                  forgotPassword="msg://loginForm.forgotPassword"/>
-            <errorMessage title="msg://loginForm.errorTitle"
-                          message="msg://loginForm.badCredentials"
-                          username="msg://loginForm.errorUsername"
-                          password="msg://loginForm.errorPassword"/>
-        </loginForm>
+
+        <tabSheet id="loginTabSheet" width="450px" classNames="bg-contrast-5 shadow-m p-m">
+            <tab id="loginTab" label="Вход">
+                <vbox padding="false" alignItems="CENTER">
+                    <loginForm id="login"
+                               forgotPasswordButtonVisible="false">
+                        <form title="msg://loginForm.headerTitle"
+                              username="msg://loginForm.username"
+                              password="msg://loginForm.password"
+                              rememberMe="msg://loginForm.rememberMe"
+                              submit="msg://loginForm.submit"
+                              forgotPassword="msg://loginForm.forgotPassword"/>
+                        <errorMessage title="msg://loginForm.errorTitle"
+                                      message="msg://loginForm.badCredentials"
+                                      username="msg://loginForm.errorUsername"
+                                      password="msg://loginForm.errorPassword"/>
+                    </loginForm>
+                </vbox>
+            </tab>
+
+            <tab id="registrationTab" label="Регистрация">
+                <vbox id="registrationBox" padding="true" spacing="false">
+                    <h3 text="Регистрация нового пользователя" classNames="mt-s mb-m"/>
+
+                    <hbox width="100%" spacing="true" classNames="mb-xs">
+                        <textField id="regUsernameField" label="Логин" width="100%"
+                                   required="true"/>
+                        <textField id="regLastNameField" label="Фамилия" width="100%" required="true"/>
+                    </hbox>
+
+                    <hbox width="100%" spacing="true" classNames="mb-xs">
+                        <textField id="regFirstNameField" label="Имя" width="100%" required="true"/>
+                        <textField id="regPatronymicField" label="Отчество" width="100%"/>
+                    </hbox>
+
+                    <passwordField id="regPasswordField" label="Пароль" width="100%"
+                                   required="true" classNames="mb-xs"/>
+
+                    <passwordField id="regConfirmPasswordField" label="Повторите пароль"
+                                   width="100%" required="true" classNames="mb-m"/>
+
+                    <button id="registerBtn" text="Зарегистрироваться"
+                            themeNames="primary success" width="100%"/>
+                </vbox>
+            </tab>
+        </tabSheet>
+
     </layout>
 </view>

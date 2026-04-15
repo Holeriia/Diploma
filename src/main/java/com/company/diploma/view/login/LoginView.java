@@ -1,5 +1,7 @@
 package com.company.diploma.view.login;
 
+import com.company.diploma.entity.User;
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.login.AbstractLogin.LoginEvent;
 import com.vaadin.flow.component.login.LoginI18n;
@@ -8,12 +10,20 @@ import com.vaadin.flow.i18n.LocaleChangeObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import io.jmix.core.CoreProperties;
+import io.jmix.core.DataManager;
 import io.jmix.core.MessageTools;
 import io.jmix.core.security.AccessDeniedException;
+import io.jmix.core.security.SystemAuthenticator;
+import io.jmix.core.security.UserRepository;
+import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.loginform.JmixLoginForm;
+import io.jmix.flowui.component.textfield.JmixPasswordField;
+import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.kit.component.ComponentUtils;
+import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.kit.component.loginform.JmixLoginI18n;
 import io.jmix.flowui.view.*;
+import io.jmix.securitydata.entity.RoleAssignmentEntity;
 import io.jmix.securityflowui.authentication.AuthDetails;
 import io.jmix.securityflowui.authentication.LoginViewSupport;
 import org.apache.commons.lang3.StringUtils;
@@ -24,8 +34,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -121,5 +133,96 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
         loginI18n.setErrorMessage(errorMessage);
 
         login.setI18n(loginI18n);
+    }
+
+    @ViewComponent
+    private TypedTextField<String> regUsernameField;
+    @ViewComponent
+    private TypedTextField<String> regLastNameField;
+    @ViewComponent
+    private TypedTextField<String> regFirstNameField;
+    @ViewComponent
+    private TypedTextField<String> regPatronymicField;
+    @ViewComponent
+    private com.vaadin.flow.component.textfield.PasswordField regPasswordField;
+    @ViewComponent
+    private com.vaadin.flow.component.textfield.PasswordField regConfirmPasswordField;
+
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private Notifications notifications;
+    @Autowired
+    private SystemAuthenticator systemAuthenticator;
+
+    @Subscribe("registerBtn")
+    public void onRegisterBtnClick(final ClickEvent<JmixButton> event) {
+        String username = regUsernameField.getValue();
+        String password = regPasswordField.getValue();
+        String confirm = regConfirmPasswordField.getValue();
+
+        if (username == null || password == null || !password.equals(confirm)) {
+            notifications.create("Пароли не совпадают или не заполнены").show();
+            return;
+        }
+
+        // Выполняем под системной записью, так как аноним не может писать в таблицу User
+        systemAuthenticator.runWithSystem(() -> {
+            // Проверка на уникальность логина
+            boolean exists = dataManager.load(User.class)
+                    .query("select u from User u where u.username = :username")
+                    .parameter("username", username)
+                    .optional().isPresent();
+
+            if (exists) {
+                notifications.create("Пользователь с таким логином уже есть").show();
+                return;
+            }
+
+            User newUser = dataManager.create(User.class);
+            newUser.setUsername(username);
+            newUser.setLastName(regLastNameField.getValue());
+            newUser.setFirstName(regFirstNameField.getValue());
+            newUser.setPatronymic(regPatronymicField.getValue());
+            newUser.setPassword(passwordEncoder.encode(password));
+            newUser.setActive(true);
+
+            dataManager.save(newUser);
+            assignRoles(username);
+            notifications.create("Успех! Теперь войдите под своим логином").show();
+            clearFields();
+        });
+    }
+
+    private void clearFields() {
+        regUsernameField.clear();
+        regLastNameField.clear();
+        regFirstNameField.clear();
+        regPatronymicField.clear();
+        regPasswordField.clear();
+        regConfirmPasswordField.clear();
+    }
+
+    /**
+     * Метод для назначения ролей пользователю
+     */
+    private void assignRoles(String username) {
+        // Список кодов ролей, которые нужно назначить
+        List<String> rolesToAssign = List.of(
+                "bpm-process-task-performer",
+                "student-role",
+                "ui-minimal",
+                "participiant-role"
+        );
+
+        for (String roleCode : rolesToAssign) {
+            RoleAssignmentEntity assignment = dataManager.create(RoleAssignmentEntity.class);
+            assignment.setUsername(username);
+            assignment.setRoleCode(roleCode);
+            assignment.setRoleType("resource"); // Для ресурсных ролей (Resource Roles)
+            dataManager.save(assignment);
+        }
     }
 }
