@@ -3,11 +3,9 @@ package com.company.diploma.entity;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -25,6 +23,20 @@ public class Group {
 
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @JoinTable(name = "WORKSPACE_GROUP_LINK",
+            joinColumns = @JoinColumn(name = "GROUP_ID"),
+            inverseJoinColumns = @JoinColumn(name = "WORKSPACE_ID"))
+    @ManyToMany
+    private List<Workspace> workspaces;
+
+    public List<Workspace> getWorkspaces() {
+        return workspaces;
+    }
+
+    public void setWorkspaces(List<Workspace> workspaces) {
+        this.workspaces = workspaces;
+    }
 
     public String getDescription() {
         return description;

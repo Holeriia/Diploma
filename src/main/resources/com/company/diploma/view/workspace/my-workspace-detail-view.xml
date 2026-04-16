@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://myWorkspaceDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="workspaceDc" class="com.company.diploma.entity.Workspace">
+            <fetchPlan extends="_base">
+                <property name="groups" fetchPlan="_instance_name"/>
+            </fetchPlan>
+            <loader id="workspaceDl"/>
+            <collection id="groupsDc" property="groups"/>
+        </instance>
+
+        <collection id="allTeachersDc" class="com.company.diploma.entity.User">
+            <fetchPlan extends="_base"/>
+            <loader id="allTeachersDl">
+                <query><![CDATA[select e from User e where e.userRole = :role]]></query>
+            </loader>
+        </collection>
+
+        <collection id="participantsDc" class="com.company.diploma.entity.Participant">
+            <fetchPlan extends="_base">
+                <property name="user" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="participantsDl">
+                <query><![CDATA[select e from Participant e where e.workspace = :workspace]]></query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="workspaceDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name" colspan="2"/>
+            <textArea id="descriptionField" height="5em" property="description" colspan="2"/>
+        </formLayout>
+
+        <hbox width="100%" spacing="true">
+            <vbox width="40%" padding="false">
+                <h4 text="msg://com.company.diploma.entity/Workspace.groups"/>
+                <hbox classNames="buttons-panel">
+                    <button action="groupsDataGrid.addAction"/>
+                    <button action="groupsDataGrid.excludeAction"/>
+                </hbox>
+                <dataGrid id="groupsDataGrid" dataContainer="groupsDc" width="100%" minHeight="20em">
+                    <actions>
+                        <action id="addAction" type="list_add"/>
+                        <action id="excludeAction" type="list_exclude"/>
+                    </actions>
+                    <columns>
+                        <column property="name"/>
+                    </columns>
+                </dataGrid>
+            </vbox>
+
+            <vbox width="60%" padding="false">
+                <h4 text="Назначение преподавателей"/>
+                <dataGrid id="teachersDataGrid"
+                          dataContainer="allTeachersDc"
+                          width="100%"
+                          minHeight="20em"
+                          selectionMode="MULTI">
+                    <columns>
+                        <column key="displayName" header="Преподаватель"/>
+                    </columns>
+                </dataGrid>
+            </vbox>
+        </hbox>
+
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

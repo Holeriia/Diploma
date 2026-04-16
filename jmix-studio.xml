@@ -17,4 +17,7 @@
       </entry>
     </moduleSettings>
   </component>
+  <component name="TranslationAddonsNotifySettings">
+    <option name="dontShowInstallSuggest" value="true" />
+  </component>
 </project>

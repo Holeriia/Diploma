@@ -1,6 +1,7 @@
 package com.company.diploma.view.login;
 
 import com.company.diploma.entity.User;
+import com.company.diploma.entity.UserRole;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.login.AbstractLogin.LoginEvent;
@@ -188,6 +189,7 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
             newUser.setPatronymic(regPatronymicField.getValue());
             newUser.setPassword(passwordEncoder.encode(password));
             newUser.setActive(true);
+            newUser.setUserRole(UserRole.STUDENT);
 
             dataManager.save(newUser);
             assignRoles(username);

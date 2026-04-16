@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <createTable tableName="WORKSPACE_GROUP_LINK">
+            <column name="GROUP_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WORKSPACE_GROUP_LINK"/>
+            </column>
+            <column name="WORKSPACE_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WORKSPACE_GROUP_LINK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <addForeignKeyConstraint baseColumnNames="GROUP_ID" baseTableName="WORKSPACE_GROUP_LINK"
+                                 constraintName="FK_WORGRO_ON_GROUP" referencedColumnNames="ID"
+                                 referencedTableName="GROUP_"/>
+    </changeSet>
+    <changeSet id="3" author="Diploma">
+        <addForeignKeyConstraint baseColumnNames="WORKSPACE_ID" baseTableName="WORKSPACE_GROUP_LINK"
+                                 constraintName="FK_WORGRO_ON_WORKSPACE" referencedColumnNames="ID"
+                                 referencedTableName="WORKSPACE"/>
+    </changeSet>
+</databaseChangeLog>

@@ -18,6 +18,12 @@ public class Workspace {
     @Id
     private UUID id;
 
+    @JoinTable(name = "WORKSPACE_GROUP_LINK",
+            joinColumns = @JoinColumn(name = "WORKSPACE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "GROUP_ID"))
+    @ManyToMany
+    private List<Group> groups;
+
     @InstanceName
     @Column(name = "NAME")
     private String name;
@@ -29,6 +35,14 @@ public class Workspace {
     @Composition
     @OneToMany(mappedBy = "workspace")
     private List<Participant> participants;
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
 
     public List<Participant> getParticipants() {
         return participants;
