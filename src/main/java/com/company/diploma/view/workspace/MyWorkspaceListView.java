@@ -6,9 +6,14 @@ import com.company.diploma.view.workspacedashboard.WorkspaceDashboardView;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
+import io.jmix.core.AccessManager;
+import io.jmix.core.DataManager;
+import io.jmix.flowui.Notifications;
 import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.ViewNavigators;
+import io.jmix.flowui.accesscontext.UiShowViewContext;
 import io.jmix.flowui.component.grid.DataGrid;
+import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +59,38 @@ public class MyWorkspaceListView extends StandardListView<Workspace> {
                         QueryParameters.of("workspaceId", workspace.getId().toString())
                 )
                 .withBackwardNavigation(true)
+                .navigate();
+    }
+
+    @Autowired
+    private Notifications notifications;
+    @Autowired
+    private AccessManager accessManager;
+
+    @Subscribe("workspacesDataGrid.editAction")
+    public void onWorkspacesDataGridEditAction(final ActionPerformedEvent event) {
+        Workspace selectedWorkspace = workspacesDataGrid.getSingleSelectedItem();
+
+        if (selectedWorkspace == null) {
+            return;
+        }
+
+        // Проверяем право открывать вьюху MyWorkspace.detail
+        UiShowViewContext viewContext = new UiShowViewContext("MyWorkspace.detail");
+        accessManager.applyRegisteredConstraints(viewContext);
+        boolean hasAccess = viewContext.isPermitted();
+
+        if (!hasAccess) {
+            notifications.create("Доступ ограничен")
+                    .withType(Notifications.Type.WARNING)
+                    .show();
+            return;
+        }
+
+        // Если доступ есть — открываем detail вручную
+        viewNavigators.detailView(workspacesDataGrid)
+                .withViewId("MyWorkspace.detail")
+                .editEntity(selectedWorkspace)
                 .navigate();
     }
 }

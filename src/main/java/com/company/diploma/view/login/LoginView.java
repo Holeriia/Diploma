@@ -208,23 +208,41 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
     }
 
     /**
-     * Метод для назначения ролей пользователю
+     * Метод для автоматического назначения ролей при регистрации
      */
     private void assignRoles(String username) {
-        // Список кодов ролей, которые нужно назначить
-        List<String> rolesToAssign = List.of(
+        // 1. Ресурсные роли
+        List<String> resourceRoles = List.of(
                 "bpm-process-task-performer",
                 "student-role",
                 "ui-minimal",
                 "participant-role"
         );
 
-        for (String roleCode : rolesToAssign) {
-            RoleAssignmentEntity assignment = dataManager.create(RoleAssignmentEntity.class);
-            assignment.setUsername(username);
-            assignment.setRoleCode(roleCode);
-            assignment.setRoleType("resource"); // Для ресурсных ролей (Resource Roles)
-            dataManager.save(assignment);
+        // 2. Роли уровня строк
+        List<String> rowLevelRoles = List.of(
+                "workspace-access-role"
+        );
+
+        // Сохраняем ресурсные роли
+        for (String roleCode : resourceRoles) {
+            saveRoleAssignment(username, roleCode, "resource");
         }
+
+        // Сохраняем Row-level роли
+        for (String roleCode : rowLevelRoles) {
+            saveRoleAssignment(username, roleCode, "row_level");
+        }
+    }
+
+    /**
+     * Вспомогательный метод для сохранения записи в БД
+     */
+    private void saveRoleAssignment(String username, String roleCode, String roleType) {
+        RoleAssignmentEntity assignment = dataManager.create(RoleAssignmentEntity.class);
+        assignment.setUsername(username);
+        assignment.setRoleCode(roleCode);
+        assignment.setRoleType(roleType);
+        dataManager.save(assignment);
     }
 }

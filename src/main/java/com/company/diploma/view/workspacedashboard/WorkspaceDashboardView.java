@@ -18,6 +18,7 @@ import io.jmix.bpm.service.UserGroupService;
 import io.jmix.bpm.util.FlowableEntitiesConverter;
 import io.jmix.bpmflowui.processform.ProcessFormViews;
 import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlan;
 import io.jmix.core.LoadContext;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
@@ -37,6 +38,7 @@ import org.flowable.task.api.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -100,27 +102,22 @@ public class WorkspaceDashboardView extends StandardView {
 
     @Install(to = "requestsGrid.createAction", subject = "initializer")
     private void requestsGridCreateActionInitializer(Request request) {
+        if (workspaceId == null) return;
 
-        // 1. workspace
         Workspace workspace = dataManager.load(Workspace.class)
                 .id(workspaceId)
                 .one();
         request.setWorkspace(workspace);
 
-        // 2. текущий пользователь → participant
         User user = (User) currentAuthentication.getUser();
 
+        // Теперь мы уверены, что participant существует, так как ensureUserIsParticipant
         Participant participant = dataManager.load(Participant.class)
-                .query("""
-                    select p from Participant p
-                    where p.user = :user
-                      and p.workspace = :workspace
-                    """)
+                .query("select p from Participant p where p.user = :user and p.workspace = :workspace")
                 .parameter("user", user)
                 .parameter("workspace", workspace)
                 .one();
 
-        // 3. автозаполнение
         request.setInitiator(participant);
         request.setStatus(RequestStatus.DRAFT);
     }
@@ -152,6 +149,9 @@ public class WorkspaceDashboardView extends StandardView {
 
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
+
+        ensureUserIsParticipant();
+
         currentUserName = currentUserSubstitution.getEffectiveUser().getUsername();
         userGroupCodes = userGroupService.getUserGroups(currentUserName)
                 .stream()
@@ -159,6 +159,54 @@ public class WorkspaceDashboardView extends StandardView {
                 .toList();
 
         tasksDl.load();
+    }
+
+    private void ensureUserIsParticipant() {
+        if (workspaceId == null) return;
+
+        User currentUser = (User) currentAuthentication.getUser();
+
+        // 1. Проверяем, существует ли уже участник
+        boolean alreadyParticipant = dataManager.load(Participant.class)
+                .query("select p from Participant p where p.workspace.id = :wsId and p.user = :user")
+                .parameter("wsId", workspaceId)
+                .parameter("user", currentUser)
+                .optional().isPresent();
+
+        if (alreadyParticipant) return;
+
+        // 2. Если нет, ищем запись Студента для текущего пользователя
+        Optional<Student> studentOpt = dataManager.load(Student.class)
+                .query("select s from Student s where s.user = :user")
+                .parameter("user", currentUser)
+                .fetchPlan(plan -> {
+                    plan.addFetchPlan(FetchPlan.BASE);
+                    plan.add("group");
+                })
+                .optional();
+
+        if (studentOpt.isPresent()) {
+            Group studentGroup = studentOpt.get().getGroup();
+
+            // Загружаем Workspace, чтобы проверить его группы
+            Workspace workspace = dataManager.load(Workspace.class)
+                    .id(workspaceId)
+                    .fetchPlan(plan -> {
+                        plan.addFetchPlan(FetchPlan.BASE);
+                        plan.add("groups");
+                    })
+                    .one();
+
+            if (studentGroup != null && workspace.getGroups().contains(studentGroup)) {
+                // 3. Создаем участника
+                Participant newParticipant = dataManager.create(Participant.class);
+                newParticipant.setWorkspace(workspace);
+                newParticipant.setUser(currentUser);
+                newParticipant.setAssignmentsNow(0);
+
+                dataManager.save(newParticipant);
+            }
+        }
     }
 
     @Install(to = "tasksDl", target = Target.DATA_LOADER)

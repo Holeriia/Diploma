@@ -33,8 +33,8 @@ public interface ParticipantRole {
     @EntityPolicy(entityClass = Workspace.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
     void workspace();
 
-    @EntityAttributePolicy(entityClass = Participant.class, attributes = {"id", "user"}, action = EntityAttributePolicyAction.VIEW)
-    @EntityPolicy(entityClass = Participant.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
+    @EntityAttributePolicy(entityClass = Participant.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
+    @EntityPolicy(entityClass = Participant.class, actions = EntityPolicyAction.ALL)
     void participant();
 
     @EntityAttributePolicy(entityClass = User.class, attributes = {"firstName", "lastName", "patronymic"}, action = EntityAttributePolicyAction.VIEW)

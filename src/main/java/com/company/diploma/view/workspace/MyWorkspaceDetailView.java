@@ -24,7 +24,6 @@ import java.util.Set;
 @Route(value = "my-workspaces/:id", layout = MainView.class)
 @ViewController(id = "MyWorkspace.detail")
 @ViewDescriptor(path = "my-workspace-detail-view.xml")
-@PrimaryDetailView(Workspace.class)
 @EditedEntityContainer("workspaceDc")
 public class MyWorkspaceDetailView extends StandardDetailView<Workspace> {
     @ViewComponent

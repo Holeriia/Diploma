@@ -63,7 +63,7 @@
             </vbox>
 
             <vbox width="60%" padding="false">
-                <h4 text="Назначение преподавателей"/>
+                <h4 text="Преподаватели"/>
                 <dataGrid id="teachersDataGrid"
                           dataContainer="allTeachersDc"
                           width="100%"
