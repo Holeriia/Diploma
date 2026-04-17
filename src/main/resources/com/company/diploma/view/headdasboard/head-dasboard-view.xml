@@ -51,8 +51,14 @@
                 </vbox>
             </tab>
             <tab id="personalDataTab" label="Личные данные">
-                <vbox padding="true">
-                    <span text="Здесь будут личные данные студентов"/>
+                <vbox padding="true" spacing="true" id="personalDataBox">
+                    <hbox id="personalDataToolbar" spacing="true">
+                        <button id="exportReportBtn"
+                                text="Выгрузить отчет"
+                                icon="DOWNLOAD"
+                                themeNames="success"/>
+                    </hbox>
+                    <vbox id="studentsTablesContainer" width="100%" spacing="true"/>
                 </vbox>
             </tab>
             <tab id="statisticsTab" label="Статистика">

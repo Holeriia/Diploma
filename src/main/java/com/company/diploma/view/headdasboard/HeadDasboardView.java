@@ -1,9 +1,15 @@
 package com.company.diploma.view.headdasboard;
 
 
+import com.company.diploma.app.ExcelReportService;
+import com.company.diploma.entity.Group;
+import com.company.diploma.entity.Student;
+import com.company.diploma.entity.User;
 import com.company.diploma.entity.Workspace;
 import com.company.diploma.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import io.jmix.bpm.entity.TaskData;
 import io.jmix.bpm.entity.UserGroup;
@@ -11,20 +17,33 @@ import io.jmix.bpm.multitenancy.BpmTenantProvider;
 import io.jmix.bpm.service.UserGroupService;
 import io.jmix.bpm.util.FlowableEntitiesConverter;
 import io.jmix.bpmflowui.processform.ProcessFormViews;
+import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlan;
 import io.jmix.core.LoadContext;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.component.combobox.EntityComboBox;
+import io.jmix.flowui.component.grid.DataGrid;
+import io.jmix.flowui.download.ByteArrayDownloadDataProvider;
+import io.jmix.flowui.download.DownloadFormat;
+import io.jmix.flowui.download.Downloader;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.view.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.WorkbookUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+import java.io.IOException;
 import java.util.List;
 
 @Route(value = "head-dasboard-view", layout = MainView.class)
@@ -47,11 +66,117 @@ public class HeadDasboardView extends StandardView {
                     .show();
             return;
         }
-
+        refreshPersonalData();
         // Здесь мы позже добавим обновление данных в коллекциях на вкладках
         notifications.create("Данные обновлены для: " + selectedWorkspace.getName())
                 .withType(Notifications.Type.SUCCESS)
                 .show();
+    }
+
+    @ViewComponent
+    private VerticalLayout studentsTablesContainer;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private UiComponents uiComponents;
+
+
+    private void refreshPersonalData() {
+        // Очищаем контейнер
+        studentsTablesContainer.removeAll();
+
+        Workspace selectedWorkspace = workspaceField.getValue();
+        if (selectedWorkspace == null) return;
+
+        // Загружаем Workspace с коллекцией групп
+        Workspace workspace = dataManager.load(Workspace.class)
+                .id(selectedWorkspace.getId())
+                .fetchPlan(plan -> {
+                    plan.addFetchPlan(FetchPlan.BASE);
+                    plan.add("groups", FetchPlan.BASE);
+                })
+                .one();
+
+        // Создаем секции для каждой группы
+        for (Group group : workspace.getGroups()) {
+            createGroupSection(group, workspace);
+        }
+    }
+
+    private void createGroupSection(Group group, Workspace workspace) {
+        // 1. Создаем заголовок (Vaadin компонент)
+        H3 groupHeader = new H3("Группа: " + group.getName());
+        groupHeader.getStyle().set("margin-top", "0");
+        groupHeader.getStyle().set("margin-bottom", "var(--lumo-space-s)");
+        studentsTablesContainer.add(groupHeader);
+
+        // 2. Создаем DataGrid (Jmix компонент)
+        DataGrid<Student> grid = uiComponents.create(DataGrid.class);
+        grid.setWidthFull();
+        grid.setAllRowsVisible(true); // Чтобы сетка не скроллилась, а росла вниз
+
+        // 3. Загружаем данные студентов через JPQL
+        List<Student> students = dataManager.load(Student.class)
+                .query("select s from Student s where s.group = :group " +
+                        "and s.user in (select p.user from Participant p where p.workspace = :ws)")
+                .parameter("group", group)
+                .parameter("ws", workspace)
+                .fetchPlan(plan -> {
+                    plan.addFetchPlan(FetchPlan.BASE);
+                    plan.add("user", FetchPlan.BASE);
+                })
+                .list();
+
+        // 4. Настраиваем колонки через лямбда-выражения
+        grid.addColumn(student -> {
+            User u = student.getUser();
+            String patronymic = u.getPatronymic() != null ? u.getPatronymic() : "";
+            return String.format("%s %s %s", u.getLastName(), u.getFirstName(), patronymic).trim();
+        }).setHeader("ФИО").setAutoWidth(true);
+
+        grid.addColumn(student -> student.getUser().getPhoneNumber()).setHeader("Телефон");
+        grid.addColumn(student -> student.getUser().getEmail()).setHeader("Почта");
+        grid.addColumn(Student::getSnils).setHeader("СНИЛС");
+
+        // Безопасное получение Enum BasisOfLearning
+        grid.addColumn(student -> {
+            return student.getBasisOfLearning() != null ? student.getBasisOfLearning().name() : "";
+        }).setHeader("Основа обучения");
+
+        // 5. Заполняем данными и добавляем на макет
+        grid.setItems(students);
+        studentsTablesContainer.add(grid);
+    }
+
+    @Autowired
+    private Downloader downloader;
+    @Autowired
+    private ExcelReportService excelReportService;
+
+    @Subscribe("exportReportBtn")
+    public void onExportReportBtnClick(final ClickEvent<JmixButton> event) {
+        Workspace selectedWorkspace = workspaceField.getValue();
+        if (selectedWorkspace == null) {
+            notifications.create("Сначала выберите пространство").show();
+            return;
+        }
+
+        try {
+            byte[] reportBytes = excelReportService.generateWorkspaceStudentsReport(selectedWorkspace);
+
+            String fileName = "Личная_информация_" + selectedWorkspace.getName() + ".xlsx";
+
+            downloader.download(
+                    new ByteArrayDownloadDataProvider(reportBytes, 8192, null),
+                    fileName,
+                    DownloadFormat.XLSX
+            );
+
+        } catch (Exception e) {
+            notifications.create("Ошибка при генерации Excel")
+                    .withType(Notifications.Type.ERROR)
+                    .show();
+        }
     }
 
     @ViewComponent
