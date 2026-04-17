@@ -1,6 +1,7 @@
 package com.company.diploma.view.headdasboard;
 
 import com.company.diploma.app.ExcelReportService;
+import com.company.diploma.app.WordReportService;
 import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
@@ -52,6 +53,9 @@ public class HeadDasboardView extends StandardView {
     @Autowired
     private Notifications notifications;
 
+    @ViewComponent
+    private CollectionLoader<Assignment> assignmentsDl;
+
     @Subscribe("applyBtn")
     public void onApplyBtnClick(final ClickEvent<JmixButton> event) {
         Workspace selectedWorkspace = workspaceField.getValue();
@@ -63,10 +67,40 @@ public class HeadDasboardView extends StandardView {
         }
         refreshPersonalData();
         refreshStatistics();
+        refreshAssignments();
+
         // Здесь мы позже добавим обновление данных в коллекциях на вкладках
         notifications.create("Данные обновлены для: " + selectedWorkspace.getName())
                 .withType(Notifications.Type.SUCCESS)
                 .show();
+    }
+
+    @Autowired
+    private WordReportService wordReportService;
+
+    @Subscribe("exportWordReportBtn")
+    public void onExportWordReportBtnClick(final ClickEvent<JmixButton> event) {
+        Workspace selectedWorkspace = workspaceField.getValue();
+        if (selectedWorkspace == null) {
+            notifications.create("Сначала выберите пространство").show();
+            return;
+        }
+
+        try {
+            byte[] reportBytes = wordReportService.generateApprovedTopicsReport(selectedWorkspace);
+            String fileName = "Утвержденные_темы_" + selectedWorkspace.getName() + ".docx";
+
+            downloader.download(
+                    new ByteArrayDownloadDataProvider(reportBytes, 8192, null),
+                    fileName,
+                    DownloadFormat.DOCX
+            );
+
+        } catch (Exception e) {
+            notifications.create("Ошибка при генерации Word отчета: " + e.getMessage())
+                    .withType(Notifications.Type.ERROR)
+                    .show();
+        }
     }
 
     @ViewComponent
@@ -75,7 +109,6 @@ public class HeadDasboardView extends StandardView {
     private DataManager dataManager;
     @Autowired
     private UiComponents uiComponents;
-
 
     private void refreshPersonalData() {
         // Очищаем контейнер
@@ -249,6 +282,15 @@ public class HeadDasboardView extends StandardView {
 
         grid.setItems(rows);
         statisticsTableContainer.add(grid);
+    }
+
+    private void refreshAssignments() {
+        Workspace selectedWorkspace = workspaceField.getValue();
+        if (selectedWorkspace != null) {
+            // Устанавливаем параметр в запрос и запускаем загрузку
+            assignmentsDl.setParameter("workspace", selectedWorkspace);
+            assignmentsDl.load();
+        }
     }
 
     @ViewComponent

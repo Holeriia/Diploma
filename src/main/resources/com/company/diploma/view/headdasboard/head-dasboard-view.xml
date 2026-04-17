@@ -15,6 +15,21 @@
                     class="io.jmix.bpm.entity.TaskData">
             <loader id="tasksDl"/>
         </collection>
+        <collection id="assignmentsDc"
+                    class="com.company.diploma.entity.Assignment">
+            <fetchPlan extends="_base">
+                <property name="mentor" fetchPlan="_base">
+                </property>
+                <property name="mentee" fetchPlan="_base">
+                </property>
+                <property name="topic" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="assignmentsDl">
+                <query>
+                    <![CDATA[select e from Assignment e where e.workspace = :workspace]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -68,8 +83,24 @@
                 </vbox>
             </tab>
             <tab id="assignmentsTab" label="Назначения">
-                <vbox padding="true">
-                    <span text="Список тем с преподавателями"/>
+                <vbox padding="true" spacing="true">
+                    <h3 text="Список назначений в пространстве"/>
+                    <button id="exportWordReportBtn"
+                            text="Выгрузить приказ (Word)"
+                            icon="FILE"
+                            themeNames="primary"/>
+                    <dataGrid id="assignmentsDataGrid"
+                              width="100%"
+                              minHeight="20em"
+                              dataContainer="assignmentsDc"
+                              columnReorderingAllowed="true">
+                        <columns>
+                            <column property="mentor" header="Преподаватель"/>
+                            <column property="mentee" header="Студент"/>
+                            <column property="topic" header="Тема"/>
+                            <column property="status" header="Статус"/>
+                        </columns>
+                    </dataGrid>
                 </vbox>
             </tab>
         </tabSheet>
