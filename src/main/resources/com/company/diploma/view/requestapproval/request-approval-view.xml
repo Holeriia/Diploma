@@ -6,17 +6,24 @@
         <instance id="requestDc"
                   class="com.company.diploma.entity.Request">
             <fetchPlan>
-                <property name="initiator">
-                    <property name="user" fetchPlan="_instance_name"/>
-                </property>
                 <property name="name"/>
                 <property name="description"/>
                 <property name="status"/>
+
+                <property name="initiator">
+                    <property name="user">
+                        <property name="firstName"/>
+                        <property name="lastName"/>
+                        <property name="patronymic"/>
+
+                        <property name="interests" fetchPlan="_instance_name"/>
+                    </property>
+                </property>
+
                 <property name="comments" fetchPlan="_base">
                     <property name="author" fetchPlan="_instance_name"/>
                 </property>
             </fetchPlan>
-
             <loader id="requestDl"/>
             <collection id="commentsDc" property="comments"/>
         </instance>
@@ -33,6 +40,13 @@
                        label="Инициатор"
                        dataContainer="requestDc"
                        property="initiator.user"/>
+
+            <textField id="interestsPicker"
+                       label="Интересы инициатора"
+                       dataContainer="requestDc"
+                       property="initiator.user.interests"
+                       readOnly="true"/>
+
 
             <textField id="nameField"
                        label="Название"

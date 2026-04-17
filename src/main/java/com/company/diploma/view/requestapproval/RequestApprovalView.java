@@ -10,11 +10,13 @@ import io.jmix.bpmflowui.processform.annotation.Outcome;
 import io.jmix.bpmflowui.processform.annotation.ProcessForm;
 import io.jmix.bpmflowui.processform.annotation.ProcessVariable;
 import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlan;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.InstanceContainer;
+import io.jmix.flowui.model.InstanceLoader;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,11 +52,22 @@ public class RequestApprovalView extends StandardView {
 
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
-        requestDc.setItem(
-                dataManager.load(Request.class)
-                        .id(requestId)
-                        .one()
-        );
+        Request loadedRequest = dataManager.load(Request.class)
+                .id(requestId)
+                .fetchPlan(plan -> {
+                    plan.addFetchPlan(FetchPlan.BASE);
+                    plan.add("initiator", initiatorPlan -> {
+                        initiatorPlan.addFetchPlan(FetchPlan.BASE);
+                        initiatorPlan.add("user", userPlan -> {
+                            userPlan.addFetchPlan(FetchPlan.BASE);
+                            userPlan.add("interests", FetchPlan.INSTANCE_NAME);
+                        });
+                    });
+                    plan.add("comments", FetchPlan.BASE);
+                })
+                .one();
+
+        requestDc.setItem(loadedRequest);
     }
 
     private Participant getCurrentParticipant() {
