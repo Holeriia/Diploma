@@ -221,7 +221,8 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
 
         // 2. Роли уровня строк
         List<String> rowLevelRoles = List.of(
-                "workspace-access-role"
+                "workspace-access-role",
+                "workspace-participant-role"
         );
 
         // Сохраняем ресурсные роли
