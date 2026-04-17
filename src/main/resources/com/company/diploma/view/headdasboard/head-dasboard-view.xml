@@ -62,8 +62,9 @@
                 </vbox>
             </tab>
             <tab id="statisticsTab" label="Статистика">
-                <vbox padding="true">
-                    <span text="Здесь будет таблица распределения по преподавателям"/>
+                <vbox id="statisticsBox" padding="true" spacing="true">
+                    <h3 text="Распределение студентов по преподавателям"/>
+                    <vbox id="statisticsTableContainer" width="100%"/>
                 </vbox>
             </tab>
             <tab id="assignmentsTab" label="Назначения">

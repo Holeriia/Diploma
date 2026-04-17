@@ -1,15 +1,14 @@
 package com.company.diploma.view.headdasboard;
 
-
 import com.company.diploma.app.ExcelReportService;
-import com.company.diploma.entity.Group;
-import com.company.diploma.entity.Student;
-import com.company.diploma.entity.User;
-import com.company.diploma.entity.Workspace;
+import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 import io.jmix.bpm.entity.TaskData;
 import io.jmix.bpm.entity.UserGroup;
@@ -34,16 +33,12 @@ import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.view.*;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = "head-dasboard-view", layout = MainView.class)
@@ -67,6 +62,7 @@ public class HeadDasboardView extends StandardView {
             return;
         }
         refreshPersonalData();
+        refreshStatistics();
         // Здесь мы позже добавим обновление данных в коллекциях на вкладках
         notifications.create("Данные обновлены для: " + selectedWorkspace.getName())
                 .withType(Notifications.Type.SUCCESS)
@@ -177,6 +173,82 @@ public class HeadDasboardView extends StandardView {
                     .withType(Notifications.Type.ERROR)
                     .show();
         }
+    }
+
+    @ViewComponent
+    private VerticalLayout statisticsTableContainer;
+
+
+    private void refreshStatistics() {
+        statisticsTableContainer.removeAll();
+        Workspace selectedWorkspace = workspaceField.getValue();
+        if (selectedWorkspace == null) return;
+
+        // 1. Получаем группы этого пространства
+        List<Group> groups = dataManager.load(Group.class)
+                .query("select g from Group_ g join g.workspaces w where w = :ws")
+                .parameter("ws", selectedWorkspace)
+                .list();
+
+        // 2. Получаем преподавателей
+        List<User> teachers = dataManager.load(User.class)
+                .query("select u from User u where u.userRole = :role")
+                .parameter("role", UserRole.TEACHER.getId())
+                .list();
+
+        List<TeacherStatsRow> rows = new ArrayList<>();
+
+        // 3. Собираем данные по назначениям (Assignment)
+        for (User teacher : teachers) {
+            TeacherStatsRow row = new TeacherStatsRow();
+            row.setTeacherName(teacher.getDisplayName());
+            boolean hasData = false;
+
+            for (Group group : groups) {
+                // Считаем назначения, где ментор - текущий препод,
+                // а менти - студент из текущей группы
+                Long count = dataManager.unconstrained().loadValue(
+                                "select count(a) from Assignment a " +
+                                        "where a.workspace = :ws " +
+                                        "and a.mentor.user = :teacher " +
+                                        "and a.mentee.user in (select s.user from Student s where s.group = :group)", Long.class)
+                        .parameter("ws", selectedWorkspace)
+                        .parameter("teacher", teacher)
+                        .parameter("group", group)
+                        .one();
+
+                if (count > 0) {
+                    row.setGroupCount(group.getName(), count.intValue());
+                    hasData = true;
+                }
+            }
+            if (hasData) rows.add(row);
+        }
+
+        // 4. Создаем чистый Vaadin Grid без метаданных Jmix
+        Grid<TeacherStatsRow> grid = new Grid<>();
+        grid.setWidthFull();
+        grid.setAllRowsVisible(true);
+
+        // 5. Настройка колонок
+        grid.addColumn(r -> r.getTeacherName())
+                .setHeader("Преподаватель / Группа")
+                .setFrozen(true)
+                .setAutoWidth(true);
+
+        for (Group group : groups) {
+            final String gName = group.getName();
+            grid.addColumn(r -> r.getGroupCount(gName))
+                    .setHeader(gName)
+                    .setTextAlign(ColumnTextAlign.CENTER);
+        }
+
+        grid.addColumn(r -> r.getTotal())
+                .setHeader("Всего")
+                .setTextAlign(ColumnTextAlign.END);
+
+        grid.setItems(rows);
+        statisticsTableContainer.add(grid);
     }
 
     @ViewComponent
