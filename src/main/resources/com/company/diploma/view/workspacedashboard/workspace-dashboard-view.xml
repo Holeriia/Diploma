@@ -7,7 +7,8 @@
             <fetchPlan extends="_base"/>
             <loader id="requestsDl">
                 <query>
-                    <![CDATA[select r from Request r]]>
+                    <![CDATA[select r from Request r
+                     where r.initiator.user.id = :current_user_id]]>
                 </query>
             </loader>
         </collection>
@@ -25,7 +26,9 @@
             </fetchPlan>
             <loader id="assignmentsDl">
                 <query>
-                    <![CDATA[select e from Assignment e]]>
+                    <![CDATA[select e from Assignment e
+                 where e.mentor.user.id = :current_user_id
+                 or e.mentee.user.id = :current_user_id]]>
                 </query>
             </loader>
         </collection>
@@ -37,7 +40,8 @@
             </fetchPlan>
             <loader id="topicsDl">
                 <query>
-                    <![CDATA[select e from Topic e]]>
+                    <![CDATA[select e from Topic e
+                 where e.author.user.id = :current_user_id]]>
                 </query>
             </loader>
         </collection>
