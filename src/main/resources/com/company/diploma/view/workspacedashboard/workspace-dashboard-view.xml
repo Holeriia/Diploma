@@ -80,9 +80,9 @@
                     <h3 text="Мои заявки"/>
 
                     <hbox classNames="buttons-panel">
-                        <button action="requestsGrid.createAction"/>
-                        <button action="requestsGrid.editAction"/>
-                        <button action="requestsGrid.removeAction"/>
+                        <button action="requestsGrid.createAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.create"/>
+                        <button action="requestsGrid.editAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.edit"/>
+                        <button action="requestsGrid.removeAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.delete"/>
                     </hbox>
 
                     <dataGrid id="requestsGrid"
@@ -128,9 +128,9 @@
                     <h3 text="Мои темы"/>
 
                     <hbox classNames="buttons-panel">
-                        <button action="topicsGrid.create"/>
-                        <button action="topicsGrid.edit"/>
-                        <button action="topicsGrid.remove"/>
+                        <button action="topicsGrid.create" text="msg://com.company.diploma.view.workspace/com.company.diploma.create"/>
+                        <button action="topicsGrid.edit" text="msg://com.company.diploma.view.workspace/com.company.diploma.edit"/>
+                        <button action="topicsGrid.remove" text="msg://com.company.diploma.view.workspace/com.company.diploma.delete"/>
                     </hbox>
 
                     <dataGrid id="topicsGrid"

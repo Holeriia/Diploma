@@ -8,7 +8,10 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 import io.jmix.bpm.entity.TaskData;
@@ -20,6 +23,7 @@ import io.jmix.bpmflowui.processform.ProcessFormViews;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.LoadContext;
+import io.jmix.core.Messages;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.UiComponents;
@@ -377,6 +381,25 @@ public class HeadDasboardView extends StandardView {
         if (bpmTenantProvider != null && bpmTenantProvider.isMultitenancyActive()) {
             taskQuery.taskTenantId(bpmTenantProvider.getCurrentUserTenantId());
         }
+    }
+
+    /**
+     * для перевода названия задач
+     */
+    @Autowired
+    private Messages messages;
+
+    @Supply(to = "tasksDataGrid.name", subject = "renderer")
+    protected Renderer<TaskData> taskNameRenderer() {
+        return new ComponentRenderer<>(taskData -> {
+            String rawName = taskData.getName();
+            if (rawName == null) {
+                return new Span("");
+            }
+
+            String localized = messages.getMessage("com.company.diploma.bpm", rawName);
+            return new Span(localized);
+        });
     }
 
 }

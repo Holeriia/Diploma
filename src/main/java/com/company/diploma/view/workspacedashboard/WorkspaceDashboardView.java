@@ -3,10 +3,7 @@ package com.company.diploma.view.workspacedashboard;
 
 import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
-import com.company.diploma.view.request.RequestCreateView;
-import com.company.diploma.view.request.RequestDetailView;
-import com.company.diploma.view.topicassignment.TopicAssignmentView;
-import com.vaadin.flow.component.ClickEvent;
+import io.jmix.core.Messages;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
@@ -48,7 +45,8 @@ import java.util.stream.Collectors;
 public class WorkspaceDashboardView extends StandardView {
 
     private UUID workspaceId;
-
+    @Autowired
+    private Messages messages;
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
 
@@ -61,6 +59,16 @@ public class WorkspaceDashboardView extends StandardView {
         }
 
         workspaceId = UUID.fromString(workspaceIds.get(0));
+        // подставляем имя в заголовок страницы
+        Workspace workspace = dataManager.load(Workspace.class)
+                .id(workspaceId)
+                .one();
+
+        String title = String.format(
+                messages.getMessage(WorkspaceDashboardView.class, "workspaceDashboardView.titleWithName"),
+                workspace.getName()
+        );
+        setPageTitle(title);
     }
 
 
@@ -263,6 +271,23 @@ public class WorkspaceDashboardView extends StandardView {
         if (bpmTenantProvider != null && bpmTenantProvider.isMultitenancyActive()) {
             taskQuery.taskTenantId(bpmTenantProvider.getCurrentUserTenantId());
         }
+    }
+
+    /**
+     * для перевода названия задач
+     */
+
+    @Supply(to = "tasksDataGrid.name", subject = "renderer")
+    protected Renderer<TaskData> taskNameRenderer() {
+        return new ComponentRenderer<>(taskData -> {
+            String rawName = taskData.getName();
+            if (rawName == null) {
+                return new Span("");
+            }
+
+            String localized = messages.getMessage("com.company.diploma.bpm", rawName);
+            return new Span(localized);
+        });
     }
 
 

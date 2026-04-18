@@ -16,24 +16,24 @@
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
-        <urlQueryParameters>
-            <genericFilter component="genericFilter"/>
-            <pagination component="pagination"/>
-        </urlQueryParameters>
+<!--        <urlQueryParameters>-->
+<!--            <genericFilter component="genericFilter"/>-->
+<!--            <pagination component="pagination"/>-->
+<!--        </urlQueryParameters>-->
     </facets>
     <actions>
         <action id="selectAction" type="lookup_select"/>
         <action id="discardAction" type="lookup_discard"/>
     </actions>
     <layout>
-        <genericFilter id="genericFilter"
-                       dataLoader="workspacesDl">
-            <properties include=".*"/>
-        </genericFilter>
+<!--        <genericFilter id="genericFilter"-->
+<!--                       dataLoader="workspacesDl">-->
+<!--            <properties include=".*"/>-->
+<!--        </genericFilter>-->
         <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button id="createButton" action="workspacesDataGrid.createAction"/>
-            <button id="editButton" action="workspacesDataGrid.editAction"/>
-            <button id="removeButton" action="workspacesDataGrid.removeAction"/>
+            <button id="createButton" action="workspacesDataGrid.createAction" text="msg://com.company.diploma.create"/>
+            <button id="editButton" action="workspacesDataGrid.editAction" text="msg://com.company.diploma.edit"/>
+            <button id="removeButton" action="workspacesDataGrid.removeAction" text="msg://com.company.diploma.delete"/>
             <simplePagination id="pagination" dataLoader="workspacesDl"/>
         </hbox>
         <dataGrid id="workspacesDataGrid"
