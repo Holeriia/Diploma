@@ -29,20 +29,20 @@
 
                     <hbox width="100%" spacing="true" classNames="mb-xs">
                         <textField id="regUsernameField" label="Логин" width="100%"
-                                   required="true"/>
-                        <textField id="regLastNameField" label="Фамилия" width="100%" required="true"/>
+                                   required="true" requiredMessage="Поле обязательно для заполнения"/>
+                        <textField id="regLastNameField" label="Фамилия" width="100%" required="true" requiredMessage="Поле обязательно для заполнения"/>
                     </hbox>
 
                     <hbox width="100%" spacing="true" classNames="mb-xs">
-                        <textField id="regFirstNameField" label="Имя" width="100%" required="true"/>
-                        <textField id="regPatronymicField" label="Отчество" width="100%"/>
+                        <textField id="regFirstNameField" label="Имя" width="100%" required="true" requiredMessage="Поле обязательно для заполнения"/>
+                        <textField id="regPatronymicField" label="Отчество" width="100%" requiredMessage="Поле обязательно для заполнения"/>
                     </hbox>
 
                     <passwordField id="regPasswordField" label="Пароль" width="100%"
-                                   required="true" classNames="mb-xs"/>
+                                   required="true" requiredMessage="Поле обязательно для заполнения" classNames="mb-xs"/>
 
                     <passwordField id="regConfirmPasswordField" label="Повторите пароль"
-                                   width="100%" required="true" classNames="mb-m"/>
+                                   width="100%" required="true" requiredMessage="Поле обязательно для заполнения" classNames="mb-m"/>
 
                     <button id="registerBtn" text="Зарегистрироваться"
                             themeNames="primary success" width="100%"/>
