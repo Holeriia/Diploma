@@ -1,6 +1,8 @@
 package com.company.diploma.entity;
 
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.metamodel.annotation.DependsOnProperties;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.NumberFormat;
 import jakarta.persistence.*;
@@ -100,4 +102,13 @@ public class Student {
         this.id = id;
     }
 
+    @InstanceName
+    @DependsOnProperties({"user"})
+    public String getInstanceName() {
+        if (user != null) {
+            // Вызываем метод отображения имени из класса User
+            return user.getDisplayName();
+        }
+        return id != null ? id.toString() : "";
+    }
 }

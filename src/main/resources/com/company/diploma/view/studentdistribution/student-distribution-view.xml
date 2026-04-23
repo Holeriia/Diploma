@@ -1,0 +1,41 @@
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://studentDistributionView.title">
+    <data>
+        <collection id="studentsDc" class="com.company.diploma.entity.Student">
+            <fetchPlan extends="_base">
+                <property name="user" fetchPlan="_base"/>
+                <property name="group" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="studentsDl">
+                <query>
+                    <![CDATA[select s from Student s
+                             where s.user in (select p.user from Participant p where p.workspace = :workspace)
+                             and not exists (
+                                 select a from Assignment a
+                                 where a.mentee.user = s.user
+                                 and a.workspace = :workspace
+                             )]]>
+                </query>
+            </loader>
+        </collection>
+
+        <collection id="teachersDc" class="com.company.diploma.entity.User">
+            <loader id="teachersDl">
+                <query>
+                    <![CDATA[select p.user from Participant p where p.workspace = :workspace]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <layout expand="distributionScroller">
+        <hbox id="topButtons" classNames="buttons-panel">
+            <button id="saveAllBtn" text="Сохранить всё распределение" themeNames="primary success"/>
+            <button id="closeBtn" text="Отмена"/>
+        </hbox>
+
+        <scroller id="distributionScroller" width="100%">
+            <vbox id="distributionContainer" width="100%" spacing="true" padding="true">
+            </vbox>
+        </scroller>
+    </layout>
+</view>

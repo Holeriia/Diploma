@@ -24,11 +24,22 @@ public class Group {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "COUNT_STUDENT")
+    private Integer countStudent;
+
     @JoinTable(name = "WORKSPACE_GROUP_LINK",
-            joinColumns = @JoinColumn(name = "GROUP_ID"),
-            inverseJoinColumns = @JoinColumn(name = "WORKSPACE_ID"))
+            joinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "WORKSPACE_ID", referencedColumnName = "ID"))
     @ManyToMany
     private List<Workspace> workspaces;
+
+    public Integer getCountStudent() {
+        return countStudent;
+    }
+
+    public void setCountStudent(Integer countStudent) {
+        this.countStudent = countStudent;
+    }
 
     public List<Workspace> getWorkspaces() {
         return workspaces;

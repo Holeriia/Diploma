@@ -79,6 +79,7 @@
             <tab id="statisticsTab" label="Статистика">
                 <vbox id="statisticsBox" padding="true" spacing="true">
                     <h3 text="Распределение студентов по преподавателям"/>
+                    <button id="distributeBtn" text="Распределить оставшихся" icon="USERS"/>
                     <vbox id="statisticsTableContainer" width="100%"/>
                 </vbox>
             </tab>

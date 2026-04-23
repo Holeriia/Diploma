@@ -4,6 +4,7 @@ import com.company.diploma.app.ExcelReportService;
 import com.company.diploma.app.WordReportService;
 import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
+import com.company.diploma.view.studentdistribution.StudentDistributionView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
@@ -25,6 +26,7 @@ import io.jmix.core.FetchPlan;
 import io.jmix.core.LoadContext;
 import io.jmix.core.Messages;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
+import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.component.combobox.EntityComboBox;
@@ -227,6 +229,17 @@ public class HeadDasboardView extends StandardView {
                 .parameter("ws", selectedWorkspace)
                 .list();
 
+        // --- Добавление надписей "Всего в группе" над таблицей ---
+        for (Group group : groups) {
+            Span groupInfo = uiComponents.create(Span.class);
+            groupInfo.setText(String.format("Всего студентов в группе %s: %d",
+                    group.getName(),
+                    group.getCountStudent() != null ? group.getCountStudent() : 0));
+            groupInfo.getStyle().set("display", "block");
+            groupInfo.getStyle().set("margin-bottom", "2px");
+            statisticsTableContainer.add(groupInfo);
+        }
+
         // 2. Получаем преподавателей
         List<User> teachers = dataManager.load(User.class)
                 .query("select u from User u where u.userRole = :role")
@@ -295,6 +308,26 @@ public class HeadDasboardView extends StandardView {
             assignmentsDl.setParameter("workspace", selectedWorkspace);
             assignmentsDl.load();
         }
+    }
+
+    @Autowired
+    private DialogWindows dialogWindows;
+
+    @Subscribe("distributeBtn")
+    public void onDistributeBtnClick(ClickEvent<JmixButton> event) {
+        Workspace selectedWorkspace = workspaceField.getValue();
+        if (selectedWorkspace == null) {
+            notifications.create("Сначала выберите пространство").show();
+            return;
+        }
+
+        DialogWindow<StudentDistributionView> window = dialogWindows.view(this, StudentDistributionView.class).build();
+        window.getView().setWorkspace(selectedWorkspace);
+        window.addAfterCloseListener(closeEvent -> {
+            refreshAssignments(); // Обновляем основную таблицу после закрытия
+            refreshStatistics();
+        });
+        window.open();
     }
 
     @ViewComponent
