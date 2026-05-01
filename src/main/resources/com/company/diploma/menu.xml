@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
-    <menu id="application" title="msg://com.company.diploma/menu.application.title" opened="true">
-
-        <item view="StudentProfileView" title="msg://com.company.diploma.view.studentprofile/studentProfileView.title"/>
-        <item view="TeacherProfileView" title="msg://com.company.diploma.view.teacherprofile/teacherProfileView.title"/>
-        <item view="MyWorkspace.list" title="msg://com.company.diploma.view.workspace/myWorkspaceListView.title"/>
-        <item view="HeadDasboardView" title="msg://com.company.diploma.view.headdasboard/headDasboardView.title"/>
-    </menu>
+    <item view="StudentProfileView" title="msg://com.company.diploma.view.studentprofile/studentProfileView.title"/>
+    <item view="TeacherProfileView" title="msg://com.company.diploma.view.teacherprofile/teacherProfileView.title"/>
+    <item view="MyWorkspace.list" title="msg://com.company.diploma.view.workspace/myWorkspaceListView.title"/>
+    <item view="HeadDasboardView" title="msg://com.company.diploma.view.headdasboard/headDasboardView.title"/>
 
     <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="false">
         <item view="User.list" title="msg://com.company.diploma.view.user/UserListView.title"/>
