@@ -41,7 +41,7 @@ public interface ParticipantRole {
     @EntityPolicy(entityClass = User.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
     void user();
 
-    @EntityAttributePolicy(entityClass = Assignment.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
+    @EntityAttributePolicy(entityClass = Assignment.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
     @EntityPolicy(entityClass = Assignment.class, actions = EntityPolicyAction.ALL)
     void assignment();
 

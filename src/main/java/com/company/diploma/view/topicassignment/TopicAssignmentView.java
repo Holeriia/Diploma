@@ -53,6 +53,7 @@ public class TopicAssignmentView extends StandardDetailView<Assignment> {
             newTopic.setName(newName);
             // Устанавливаем автора темы (ментор из текущего назначения)
             newTopic.setAuthor(getEditedEntity().getMentor());
+            newTopic.setStatus(TopicStatus.BUSY);
 
             Topic savedTopic = dataManager.save(newTopic);
             getEditedEntity().setTopic(savedTopic);

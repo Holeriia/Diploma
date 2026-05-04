@@ -17,7 +17,9 @@
             <fetchPlan extends="_base"/>
             <loader id="topicsDl">
                 <query>
-                    <![CDATA[select e from Topic e where e.status = 'ACTIVE']]>
+                    <![CDATA[select e from Topic e
+                     where e.status = 'F'
+                     and e.author.user.id = :current_user_id]]>
                 </query>
             </loader>
         </collection>

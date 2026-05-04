@@ -14,7 +14,7 @@ public interface HeadRole {
     String CODE = "head-role";
 
     @MenuPolicy(menuIds = "HeadDasboardView")
-    @ViewPolicy(viewIds = {"HeadDasboardView", "MyWorkspace.detail"})
+    @ViewPolicy(viewIds = {"HeadDasboardView", "MyWorkspace.detail", "StudentDistributionView"})
     void screens();
 
     @EntityPolicy(entityClass = Degree.class, actions = EntityPolicyAction.READ)
@@ -42,9 +42,6 @@ public interface HeadRole {
     @EntityPolicy(entityClass = Teacher.class, actions = EntityPolicyAction.READ)
     void teacher();
 
-    @EntityPolicy(entityClass = Topic.class, actions = EntityPolicyAction.READ)
-    void topic();
-
     @EntityPolicy(entityClass = Workspace.class, actions = EntityPolicyAction.READ)
     void workspace();
 
@@ -65,4 +62,7 @@ public interface HeadRole {
 
     @EntityPolicy(entityClass = Request.class, actions = EntityPolicyAction.READ)
     void request();
+
+    @EntityPolicy(entityClass = Topic.class, actions = EntityPolicyAction.READ)
+    void topic();
 }
