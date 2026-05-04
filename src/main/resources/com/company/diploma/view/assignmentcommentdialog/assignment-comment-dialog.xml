@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://assignmentCommentDialog.title">
+    <layout>
+        <textArea id="commentField"
+                  label="Комментарий"
+                  width="100%"
+                  height="150px"
+                  required="true"/>
+        <hbox id="dialogActions" classNames="pt-m">
+            <button id="okBtn" text="ОК" themeNames="primary"/>
+            <button id="cancelBtn" text="Отмена"/>
+        </hbox>
+    </layout>
+</view>

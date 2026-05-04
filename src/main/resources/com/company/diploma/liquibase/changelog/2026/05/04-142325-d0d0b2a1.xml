@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <createTable tableName="ASSIGNMENT_COMMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASSIGNMENT_COMMENT"/>
+            </column>
+            <column name="ASSIGNMENT_ID" type="UUID"/>
+            <column name="AUTHOR_ID" type="UUID"/>
+            <column name="MESSAGE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <createIndex indexName="IDX_ASSIGNMENT_COMMENT_ASSIGNMENT" tableName="ASSIGNMENT_COMMENT">
+            <column name="ASSIGNMENT_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="ASSIGNMENT_ID" baseTableName="ASSIGNMENT_COMMENT"
+                                 constraintName="FK_ASSIGNMENT_COMMENT_ON_ASSIGNMENT" referencedColumnNames="ID"
+                                 referencedTableName="ASSIGNMENT"/>
+    </changeSet>
+    <changeSet id="3" author="Diploma">
+        <createIndex indexName="IDX_ASSIGNMENT_COMMENT_AUTHOR" tableName="ASSIGNMENT_COMMENT">
+            <column name="AUTHOR_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="AUTHOR_ID" baseTableName="ASSIGNMENT_COMMENT"
+                                 constraintName="FK_ASSIGNMENT_COMMENT_ON_AUTHOR" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+</databaseChangeLog>

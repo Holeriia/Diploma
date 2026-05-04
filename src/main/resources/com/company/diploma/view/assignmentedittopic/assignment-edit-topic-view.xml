@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://assignmentEditTopicView.title">
+    <data>
+        <instance id="assignmentDc" class="com.company.diploma.entity.Assignment">
+            <fetchPlan extends="_base">
+                <property name="topic" fetchPlan="_base"/>
+                <property name="mentor" fetchPlan="_base"/>
+                <property name="mentee" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="assignmentDl"/>
+        </instance>
+
+        <!-- Загружаем только комментарии к этому назначению -->
+        <collection id="commentsDc" class="com.company.diploma.entity.AssignmentComment">
+            <fetchPlan extends="_base"/>
+            <loader id="commentsDl">
+                <query>
+                    <![CDATA[select e from AssignmentComment e where e.assignment = :container_assignmentDc order by e.id desc]]>
+                </query>
+            </loader>
+        </collection>
+
+        <!-- Список активных тем автора для выбора -->
+        <collection id="topicsDc" class="com.company.diploma.entity.Topic">
+            <fetchPlan extends="_base"/>
+            <loader id="topicsDl">
+                <query>
+                    <![CDATA[select e from Topic e where e.status = 'F' and e.author.user.id = :current_user_id]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout>
+        <h4 text="Замечания по теме:"/>
+        <dataGrid id="commentsTable" dataContainer="commentsDc" width="100%" height="200px">
+            <columns>
+                <column property="author" header="Кто вернул"/>
+                <column property="message" header="Причина возврата"/>
+            </columns>
+        </dataGrid>
+
+        <formLayout id="form" dataContainer="assignmentDc">
+            <textField id="menteeField" property="mentee" label="Менти" readOnly="true"/>
+
+            <!-- Поле для редактирования названия ТЕКУЩЕЙ темы -->
+            <textField id="topicNameField"
+                       property="topic.name"
+                       label="Название темы (редактирование)"/>
+
+            <entityComboBox id="topicSelectField"
+                            property="topic"
+                            itemsContainer="topicsDc"
+                            label="Или выбрать другую готовую тему"/>
+        </formLayout>
+
+        <hbox id="actionsPanel" classNames="pt-m">
+            <button id="sendAgainBtn" text="Отправить повторно" themeNames="primary" icon="PAPERPLANE"/>
+            <button id="closeBtn" text="Закрыть"/>
+        </hbox>
+    </layout>
+</view>
