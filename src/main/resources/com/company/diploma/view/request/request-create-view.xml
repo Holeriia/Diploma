@@ -35,9 +35,9 @@
         </formLayout>
         <h4 text="msg://com.company.diploma.entity/Request.priorities"/>
         <hbox id="prioritiesButtonsPanel" classNames="buttons-panel">
-            <button action="prioritiesDataGrid.createAction"/>
-            <button action="prioritiesDataGrid.editAction"/>
-            <button action="prioritiesDataGrid.removeAction"/>
+            <button action="prioritiesDataGrid.createAction" text="msg://Create"/>
+            <button action="prioritiesDataGrid.editAction" text="msg://Edit"/>
+            <button action="prioritiesDataGrid.removeAction" text="msg://Remove"/>
         </hbox>
         <dataGrid id="prioritiesDataGrid" dataContainer="prioritiesDc" width="100%" minHeight="20em">
             <actions>
@@ -59,9 +59,9 @@
             </columns>
         </dataGrid>
         <hbox id="detailActions">
-            <button id="saveAndCloseButton" action="saveAction"/>
-            <button id="closeButton" action="closeAction"/>
-            <button id="startProcessBtn" icon="vaadin:arrow-circle-right" text="start process"/>
+            <button id="saveAndCloseButton" action="saveAction" text="msg://Save"/>
+            <button id="closeButton" action="closeAction" text="msg://Close"/>
+            <button id="startProcessBtn" icon="vaadin:arrow-circle-right" text="msg://StartProcess"/>
         </hbox>
     </layout>
 </view>

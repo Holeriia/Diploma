@@ -1,1 +1,9 @@
 /* Define your styles here */
+
+.card {
+    border: 1px solid var(--lumo-contrast-20pct);
+    border-radius: 12px;
+    padding: 16px;
+    background-color: var(--lumo-base-color);
+    box-shadow: var(--lumo-box-shadow-xs);
+}
