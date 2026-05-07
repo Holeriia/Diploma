@@ -31,7 +31,7 @@
             </responsiveSteps>
             <textField id="nameField" property="name"/>
             <textArea id="descriptionField" height="9.5em" property="description"/>
-            <select id="statusField" property="status"/>
+            <select id="statusField" property="status" readOnly="true"/>
         </formLayout>
         <h4 text="msg://com.company.diploma.entity/Request.priorities"/>
         <hbox id="prioritiesButtonsPanel" classNames="buttons-panel">

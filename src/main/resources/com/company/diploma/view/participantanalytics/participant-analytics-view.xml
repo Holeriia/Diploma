@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://participantAnalyticsView.title">
+    <data>
+        <collection id="participantsDc"
+                    class="com.company.diploma.entity.Participant">
+            <fetchPlan extends="_base">
+                <property name="user" fetchPlan="_base">
+                    <property name="interests" fetchPlan="_base"/>
+                </property>
+                <property name="topics" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="participantsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from Participant e where e.user.userRole <> :currentRole]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+
+    <layout>
+
+        <dataGrid id="analyticsDataGrid"
+                  width="100%"
+                  height="100%"
+                  dataContainer="participantsDc"
+                  selectionMode="SINGLE"
+                  columnReorderingAllowed="true">
+            <columns>
+                <column property="user" header="Участник" />
+                <column key="interestsTextColumn" header="Интересы" />
+                <column key="topicsColumn" header="Темы (ВКР)" />
+            </columns>
+        </dataGrid>
+    </layout>
+</view>

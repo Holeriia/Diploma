@@ -6,6 +6,7 @@ import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -33,6 +34,17 @@ public class Participant {
 
     @Column(name = "ASSIGNMENTS_NOW")
     private Integer assignmentsNow;
+
+    @OneToMany(mappedBy = "author")
+    private List<Topic> topics;
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
+    }
 
     public Integer getAssignmentsNow() {
         return assignmentsNow;

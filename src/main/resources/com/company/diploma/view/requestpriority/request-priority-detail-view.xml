@@ -26,10 +26,10 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <textField id="priorityNumberField" property="priorityNumber"/>
+            <textField id="priorityNumberField" property="priorityNumber" readOnly="true"/>
             <entityPicker id="participantField" property="participant">
                 <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="showAnalyticsAction" icon="ELLIPSIS_DOTS_H"/>
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityPicker>
