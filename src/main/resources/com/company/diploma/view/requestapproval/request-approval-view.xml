@@ -106,17 +106,17 @@
 
             <button
                     id="approveBtn"
-                    text="Approve"
+                    text="msg://Approve"
                     themeNames="primary"/>
 
             <button
                     id="rejectBtn"
-                    text="Reject"
+                    text="msg://Reject"
                     themeNames="error"/>
 
             <button
                     id="commentBtn"
-                    text="returnRequest"
+                    text="msg://returnRequest"
                     icon="vaadin:arrow-backward"/>
 
         </hbox>

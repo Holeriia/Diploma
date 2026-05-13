@@ -1,6 +1,8 @@
 package com.company.diploma.entity;
 
+import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.*;
 
@@ -18,8 +20,9 @@ public class AssignmentComment {
     @Id
     private UUID id;
 
-    @JoinColumn(name = "ASSIGNMENT_ID")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDeleteInverse(DeletePolicy.CASCADE)
+    @JoinColumn(name = "ASSIGNMENT_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Assignment assignment;
 
     @JoinColumn(name = "AUTHOR_ID")

@@ -48,8 +48,8 @@
             <vbox width="40%" padding="false">
                 <h4 text="msg://com.company.diploma.entity/Workspace.groups"/>
                 <hbox classNames="buttons-panel">
-                    <button action="groupsDataGrid.addAction"/>
-                    <button action="groupsDataGrid.excludeAction"/>
+                    <button action="groupsDataGrid.addAction" text="msg://add"/>
+                    <button action="groupsDataGrid.excludeAction" text="msg://exclude"/>
                 </hbox>
                 <dataGrid id="groupsDataGrid" dataContainer="groupsDc" width="100%" minHeight="20em">
                     <actions>
@@ -77,8 +77,8 @@
         </hbox>
 
         <hbox id="detailActions">
-            <button id="saveAndCloseButton" action="saveAction"/>
-            <button id="closeButton" action="closeAction"/>
+            <button id="saveAndCloseButton" action="saveAction" text="msg://com.company.diploma.view.request/Save"/>
+            <button id="closeButton" action="closeAction" text="msg://com.company.diploma.view.request/Close"/>
         </hbox>
     </layout>
 </view>

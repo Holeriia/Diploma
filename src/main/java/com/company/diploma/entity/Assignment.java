@@ -1,9 +1,13 @@
 package com.company.diploma.entity;
 
+import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.entity.annotation.OnDelete;
+import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -42,6 +46,19 @@ public class Assignment {
 
     @Column(name = "STATUS")
     private String status;
+
+    @Composition
+    @OnDelete(DeletePolicy.CASCADE)
+    @OneToMany(mappedBy = "assignment")
+    private List<AssignmentComment> comments;
+
+    public List<AssignmentComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<AssignmentComment> comments) {
+        this.comments = comments;
+    }
 
     public AssignmentStatus getStatus() {
         return status == null ? null : AssignmentStatus.fromId(status);

@@ -14,7 +14,7 @@ public interface HeadRole {
     String CODE = "head-role";
 
     @MenuPolicy(menuIds = "HeadDasboardView")
-    @ViewPolicy(viewIds = {"HeadDasboardView", "MyWorkspace.detail", "StudentDistributionView"})
+    @ViewPolicy(viewIds = {"HeadDasboardView", "MyWorkspace.detail", "StudentDistributionView", "Group_.list"})
     void screens();
 
     @EntityPolicy(entityClass = Degree.class, actions = EntityPolicyAction.READ)

@@ -21,9 +21,14 @@
             <responsiveSteps>
                 <responsiveStep minWidth="0" columns="1"/>
             </responsiveSteps>
-            <textField id="topicField" property="topic" label="Тема" readOnly="true"/>
-            <textField id="mentorField" property="mentor" label="Ментор" readOnly="true"/>
-            <textField id="menteeField" property="mentee" label="Менти" readOnly="true"/>
+            <textArea id="topicField"
+                      property="topic.name"
+                      label="Тема"
+                      readOnly="true"
+                      height="8em"
+                      width="100%"/>
+            <textField id="mentorField" property="mentor" label="Преподаватель" readOnly="true"/>
+            <textField id="menteeField" property="mentee" label="Студент" readOnly="true"/>
         </formLayout>
 
         <hbox id="actionsPanel" classNames="pt-m">
