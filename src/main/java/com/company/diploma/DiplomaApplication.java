@@ -48,8 +48,8 @@ public class DiplomaApplication implements AppShellConfigurator {
     @EventListener
     public void printApplicationUrl(final ApplicationStartedEvent event) {
         LoggerFactory.getLogger(DiplomaApplication.class).info("Application started at "
-                + "http://localhost:"
-                + environment.getProperty("local.server.port")
+                + "http://" + environment.getProperty("server.address") + ":"
+                + environment.getProperty("server.port")
                 + Strings.nullToEmpty(environment.getProperty("server.servlet.context-path")));
     }
 }
