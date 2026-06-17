@@ -62,8 +62,14 @@
 
     </data>
 
+<!-- для перезагрузки данных в контейнерах-->
     <facets>
         <dataLoadCoordinator auto="true"/>
+
+        <timer id="autoRefreshTimer"
+               delay="5000"
+               autostart="true"
+               repeating="true"/>
     </facets>
 
     <layout>

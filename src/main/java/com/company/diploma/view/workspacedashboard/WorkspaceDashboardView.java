@@ -24,6 +24,7 @@ import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.action.list.EditAction;
 import io.jmix.flowui.component.grid.DataGrid;
+import io.jmix.flowui.facet.Timer;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionContainer;
@@ -353,5 +354,29 @@ public class WorkspaceDashboardView extends StandardView {
             span.getElement().getStyle().set("font-size", "var(--lumo-font-size-s)");
             return span;
         });
+    }
+
+
+    /**
+        Для перезагрузки данных в контейнерах
+     */
+
+    @ViewComponent
+    private CollectionLoader<Request> requestsDl;
+
+    @ViewComponent
+    private CollectionLoader<Assignment> assignmentsDl;
+
+    @ViewComponent
+    private CollectionLoader<Topic> topicsDl;
+
+    @Subscribe("autoRefreshTimer")
+    protected void onAutoRefreshTimer(Timer.TimerActionEvent event) {
+        // Пере‑загрузка данных в контейнеры
+        requestsDl.load();
+        tasksDl.load();
+        assignmentsDl.load();
+        topicsDl.load();
+        requestApprovalsDl.load();
     }
 }
