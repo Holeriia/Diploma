@@ -14,7 +14,7 @@ public interface StudentRole {
     String CODE = "student-role";
 
     @MenuPolicy(menuIds = "StudentProfileView")
-    @ViewPolicy(viewIds = "StudentProfileView")
+    @ViewPolicy(viewIds = {"StudentProfileView", "Interest.detail", "Interest.list"})
     void screens();
 
     @EntityAttributePolicy(entityClass = Student.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)

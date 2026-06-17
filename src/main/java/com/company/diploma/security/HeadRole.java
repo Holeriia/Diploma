@@ -26,10 +26,6 @@ public interface HeadRole {
     @EntityPolicy(entityClass = Department.class, actions = EntityPolicyAction.READ)
     void department();
 
-    @EntityAttributePolicy(entityClass = Group.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
-    @EntityPolicy(entityClass = Group.class, actions = EntityPolicyAction.ALL)
-    void group();
-
     @EntityPolicy(entityClass = Interest.class, actions = EntityPolicyAction.READ)
     void interest();
 
@@ -42,7 +38,8 @@ public interface HeadRole {
     @EntityPolicy(entityClass = Teacher.class, actions = EntityPolicyAction.READ)
     void teacher();
 
-    @EntityPolicy(entityClass = Workspace.class, actions = EntityPolicyAction.READ)
+    @EntityAttributePolicy(entityClass = Workspace.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
+    @EntityPolicy(entityClass = Workspace.class, actions = EntityPolicyAction.ALL)
     void workspace();
 
     @EntityPolicy(entityClass = Title.class, actions = EntityPolicyAction.READ)
@@ -65,4 +62,11 @@ public interface HeadRole {
 
     @EntityPolicy(entityClass = Topic.class, actions = EntityPolicyAction.READ)
     void topic();
+
+    @EntityPolicy(entityClass = AssignmentComment.class, actions = EntityPolicyAction.READ)
+    void assignmentComment();
+
+    @EntityAttributePolicy(entityClass = Group.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
+    @EntityPolicy(entityClass = Group.class, actions = EntityPolicyAction.ALL)
+    void group();
 }
