@@ -14,7 +14,7 @@ public interface ParticipantRole {
     String CODE = "participant-role";
 
     @MenuPolicy(menuIds = "MyWorkspace.list")
-    @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView", "Request.create", "Request.detail", "Request.approval", "RequestComment.detail", "RequestPriority.detail", "AssignmentApprovalView", "Assignment.list", "Assignment.detail", "Topic.list", "Topic.detail", "Interest.detail", "Interest.list", "TopicAssignmentView", "RequestCommentView", "AssignmentCommentDialog", "AssignmentEditTopicView", "ParticipantAnalyticsView", "RequestApproval.detail"})
+    @ViewPolicy(viewIds = {"MyWorkspace.list", "WorkspaceDashboardView", "Request.create", "Request.detail", "Request.approval", "RequestComment.detail", "RequestPriority.detail", "AssignmentApprovalView", "Assignment.list", "Assignment.detail", "Topic.list", "Topic.detail", "Interest.detail", "Interest.list", "TopicAssignmentView", "RequestCommentView", "AssignmentCommentDialog", "AssignmentEditTopicView", "ParticipantAnalyticsView", "RequestApproval.detail", "Request.read"})
     void screens();
 
     @EntityAttributePolicy(entityClass = Request.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)

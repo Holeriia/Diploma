@@ -117,7 +117,12 @@
                                 </properties>
                             </action>
 
-                            <action id="editAction" type="list_edit"/>
+                            <action id="editAction" type="list_edit">
+                                <properties>
+                                    <property name="openMode" value="DIALOG"/>
+                                    <property name="viewId" value="Request.read"/>
+                                </properties>
+                            </action>
                             <action id="removeAction" type="list_remove"/>
                         </actions>
 

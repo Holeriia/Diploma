@@ -3,6 +3,7 @@ package com.company.diploma.view.workspacedashboard;
 
 import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
+import com.company.diploma.view.request.RequestDetailView;
 import io.jmix.core.Messages;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -379,4 +380,13 @@ public class WorkspaceDashboardView extends StandardView {
         topicsDl.load();
         requestApprovalsDl.load();
     }
+
+
+//    @Subscribe
+//    public void onInit(InitEvent event) {
+//        requestsGrid.addItemDoubleClickListener(e -> {
+//            // используем уже сконфигурированный editAction
+//            requestsGrid.getAction("editAction").execute();
+//        });
+//    }
 }
