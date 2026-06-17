@@ -216,7 +216,8 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
                 "bpm-process-task-performer",
                 "student-role",
                 "ui-minimal",
-                "participant-role"
+                "participant-role",
+                "notifications-in-app-notifications-reader"
         );
 
         // 2. Роли уровня строк

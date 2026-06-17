@@ -6,7 +6,7 @@
     <item view="MyWorkspace.list" title="msg://com.company.diploma.view.workspace/myWorkspaceListView.title"/>
     <item view="HeadDasboardView" title="msg://com.company.diploma.view.headdasboard/headDasboardView.title"/>
 
-    <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title" opened="false">
+    <menu id="adminPanel" title="msg://com.company.diploma/menu.adminPannel.title">
         <item view="User.list" title="msg://com.company.diploma.view.user/UserListView.title"/>
         <item view="Department.list" title="msg://com.company.diploma.view.department/departmentListView.title"/>
         <item view="Degree.list" title="msg://com.company.diploma.view.degree/degreeListView.title"/>

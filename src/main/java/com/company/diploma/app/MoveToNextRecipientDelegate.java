@@ -3,6 +3,9 @@ package com.company.diploma.app;
 import com.company.diploma.entity.*;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
+import io.jmix.notifications.NotificationManager;
+import io.jmix.notifications.channel.impl.InAppNotificationChannel;
+import io.jmix.notifications.entity.ContentType;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.context.annotation.Scope;
@@ -17,9 +20,11 @@ import java.util.UUID;
 public class MoveToNextRecipientDelegate implements JavaDelegate {
 
     private final DataManager dataManager;
+    private final NotificationManager notificationManager;
 
-    public MoveToNextRecipientDelegate(DataManager dataManager) {
+    public MoveToNextRecipientDelegate(DataManager dataManager, NotificationManager notificationManager) {
         this.dataManager = dataManager;
+        this.notificationManager = notificationManager;
     }
 
     @Override
@@ -65,6 +70,19 @@ public class MoveToNextRecipientDelegate implements JavaDelegate {
             request.setStatus(RequestStatus.FINAL_REJECTED);
             dataManager.save(request);
             execution.setVariable("hasNext", false);
+
+            if (request.getInitiator() != null && request.getInitiator().getUser() != null) {
+                String initiatorUsername = request.getInitiator().getUser().getUsername();
+
+                notificationManager.createNotification()
+                        .withSubject("Заявка отклонена")
+                        .withRecipientUsernames(initiatorUsername)
+                        .toChannelsByNames(InAppNotificationChannel.NAME)
+                        .withContentType(ContentType.PLAIN)
+                        .withTypeName("warn")
+                        .withBody(String.format("Ваша заявка '%s' была окончательно отклонена, так как все из приоритета не согласились", request.getName()))
+                        .send();
+            }
         }
     }
 

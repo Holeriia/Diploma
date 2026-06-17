@@ -91,11 +91,30 @@ public class RequestApprovalView extends StandardView {
 
     // --- КНОПКИ ---
 
+    @Autowired
+    private io.jmix.notifications.NotificationManager notificationManager;
+
     @Subscribe("approveBtn")
     protected void onApproveBtnClick(ClickEvent<JmixButton> event) {
         Participant participant = getCurrentParticipant();
 
         saveApprovalLog(RequestDecision.APPROVE);
+
+        Request request = requestDc.getItem();
+
+        if (request.getInitiator() != null && request.getInitiator().getUser() != null) {
+            // Получаем логин автора
+            String initiatorUsername = request.getInitiator().getUser().getUsername();
+
+            notificationManager.createNotification()
+                    .withSubject("Заявка одобрена")
+                    .withRecipientUsernames(initiatorUsername)
+                    .toChannelsByNames(io.jmix.notifications.channel.impl.InAppNotificationChannel.NAME)
+                    .withContentType(io.jmix.notifications.entity.ContentType.PLAIN)
+                    .withTypeName("info")
+                    .withBody(String.format("Ваша заявка '%s' была успешно одобрена", request.getName()))
+                    .send();
+        }
 
         processFormContext.taskCompletion()
                 .withOutcome("approve")
@@ -104,7 +123,6 @@ public class RequestApprovalView extends StandardView {
 
         closeWithDefaultAction();
     }
-
     @Subscribe("rejectBtn")
     protected void onRejectBtnClick(ClickEvent<JmixButton> event) {
         saveApprovalLog(RequestDecision.REJECT);

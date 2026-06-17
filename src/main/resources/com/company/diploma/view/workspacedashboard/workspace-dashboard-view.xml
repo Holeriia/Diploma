@@ -101,7 +101,7 @@
 
                     <hbox classNames="buttons-panel">
                         <button action="requestsGrid.createAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.create"/>
-                        <button action="requestsGrid.editAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.edit"/>
+<!--                        <button action="requestsGrid.editAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.edit"/>-->
                         <button action="requestsGrid.removeAction" text="msg://com.company.diploma.view.workspace/com.company.diploma.delete"/>
                     </hbox>
 
