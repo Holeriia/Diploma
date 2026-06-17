@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://requestApprovalDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="requestApprovalDc"
+                  class="com.company.diploma.entity.RequestApproval">
+            <fetchPlan extends="_base">
+                <property name="approver" fetchPlan="_instance_name"/>
+                <property name="request" fetchPlan="_base">
+                    <property name="workspace" fetchPlan="_instance_name"/>
+                    <property name="initiator">
+                        <property name="user" fetchPlan="_instance_name"/>
+                    </property>
+                    <property name="comments" fetchPlan="_base">
+                        <property name="author">
+                            <property name="user" fetchPlan="_instance_name"/>
+                        </property>
+                    </property>
+                </property>
+            </fetchPlan>
+            <loader id="requestApprovalDl"/>
+        </instance>
+
+        <instance id="requestDc"
+                  class="com.company.diploma.entity.Request"/>
+
+        <collection id="commentsDc"
+                    class="com.company.diploma.entity.RequestComment"/>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="requestApprovalDc" labelsPosition="TOP">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+            </responsiveSteps>
+
+            <textField id="nameField" property="request.name" label="msg://com.company.diploma.entity/Request.name" readOnly="true"/>
+            <textArea id="descriptionField" height="9.5em" property="request.description" label="msg://com.company.diploma.entity/Request.description" readOnly="true"/>
+            <entityPicker id="approverField" property="approver" readOnly="true"/>
+
+            <h4 text="msg://com.company.diploma.entity/Request.comments"/>
+            <dataGrid id="commentsDataGrid" dataContainer="commentsDc" width="100%" minHeight="20em">
+                <columns>
+                    <column property="message"/>
+                    <column property="createdAt"/>
+                    <column property="author"/>
+                </columns>
+            </dataGrid>
+
+            <select id="decisionField" property="decision" readOnly="true"/>
+            <dateTimePicker id="actionDateField" property="actionDate" readOnly="true"/>
+        </formLayout>
+
+        <hbox id="detailActions">
+            <button id="closeButton" action="closeAction" text="msg://com.company.diploma.view.request/Close"/>
+        </hbox>
+    </layout>
+</view>

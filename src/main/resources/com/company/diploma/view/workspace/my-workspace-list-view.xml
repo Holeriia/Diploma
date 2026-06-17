@@ -34,7 +34,7 @@
             <button id="createButton" action="workspacesDataGrid.createAction" text="msg://com.company.diploma.create"/>
             <button id="editButton" action="workspacesDataGrid.editAction" text="msg://com.company.diploma.edit"/>
             <button id="removeButton" action="workspacesDataGrid.removeAction" text="msg://com.company.diploma.delete"/>
-            <simplePagination id="pagination" dataLoader="workspacesDl"/>
+<!--            <simplePagination id="pagination" dataLoader="workspacesDl"/>-->
         </hbox>
         <dataGrid id="workspacesDataGrid"
                   width="100%"

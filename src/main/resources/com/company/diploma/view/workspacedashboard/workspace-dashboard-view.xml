@@ -138,7 +138,7 @@
                             <action id="viewDetails" type="list_read">
                                 <properties>
                                     <property name="openMode" value="DIALOG"/>
-                                    <property name="viewId" value="Request.detail"/>
+                                    <property name="viewId" value="RequestApproval.detail"/>
                                 </properties>
                             </action>
                         </actions>

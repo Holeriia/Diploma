@@ -17,5 +17,7 @@
         <item view="Request.list" title="msg://com.company.diploma.view.request/requestListView.title"/>
         <item view="Assignment.list" title="msg://com.company.diploma.view.assignment/assignmentListView.title"/>
         <item view="Topic.list" title="msg://com.company.diploma.view.topic/topicListView.title"/>
+        <item view="RequestApproval.list"
+              title="msg://com.company.diploma.view.requestapproval/requestApprovalListView.title"/>
     </menu>
 </menu-config>
