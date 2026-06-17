@@ -3,6 +3,8 @@ package com.company.diploma.view.requestapproval;
 import com.company.diploma.entity.Request;
 import com.company.diploma.entity.RequestComment;
 import com.company.diploma.entity.Participant;
+import com.company.diploma.entity.RequestApproval;
+import com.company.diploma.entity.RequestDecision;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.textfield.TextArea;
 import io.jmix.bpmflowui.processform.ProcessFormContext;
@@ -73,9 +75,18 @@ public class RequestApprovalView extends StandardView {
     private Participant getCurrentParticipant() {
         return dataManager.load(Participant.class)
                 .query("select p from Participant p where p.user = :user and p.workspace = :workspace")
-                .parameter("user", currentAuthentication.getUser()) // текущий залогиненный юзер
-                .parameter("workspace", requestDc.getItem().getWorkspace()) // воркспейс из текущей заявки
+                .parameter("user", currentAuthentication.getUser())
+                .parameter("workspace", requestDc.getItem().getWorkspace())
                 .one();
+    }
+
+    private void saveApprovalLog(RequestDecision decision) {
+        RequestApproval approval = dataManager.create(RequestApproval.class);
+        approval.setRequest(requestDc.getItem());
+        approval.setApprover(getCurrentParticipant());
+        approval.setDecision(decision);
+        approval.setActionDate(new Date());
+        dataManager.save(approval);
     }
 
     // --- КНОПКИ ---
@@ -83,6 +94,8 @@ public class RequestApprovalView extends StandardView {
     @Subscribe("approveBtn")
     protected void onApproveBtnClick(ClickEvent<JmixButton> event) {
         Participant participant = getCurrentParticipant();
+
+        saveApprovalLog(RequestDecision.APPROVE);
 
         processFormContext.taskCompletion()
                 .withOutcome("approve")
@@ -94,6 +107,8 @@ public class RequestApprovalView extends StandardView {
 
     @Subscribe("rejectBtn")
     protected void onRejectBtnClick(ClickEvent<JmixButton> event) {
+        saveApprovalLog(RequestDecision.REJECT);
+
         processFormContext.taskCompletion()
                 .withOutcome("reject")
                 .complete();
@@ -103,10 +118,12 @@ public class RequestApprovalView extends StandardView {
 
     @Subscribe("commentBtn")
     public void onCommentBtnClick(ClickEvent<JmixButton> event) {
+
+        saveApprovalLog(RequestDecision.COMMENT);
+
         processFormContext.taskCompletion()
                 .withOutcome("comment")
                 .complete();
-
         closeWithDefaultAction();
     }
 

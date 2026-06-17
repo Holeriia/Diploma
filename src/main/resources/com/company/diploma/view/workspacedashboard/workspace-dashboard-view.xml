@@ -45,6 +45,20 @@
                 </query>
             </loader>
         </collection>
+        <collection id="requestApprovalsDc" class="com.company.diploma.entity.RequestApproval">
+            <loader id="requestApprovalsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from RequestApproval e
+             where e.approver.user.id = :current_user_id
+             and e.request.workspace = :workspace
+             order by e.actionDate desc]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base">
+                <property name="request" fetchPlan="_base">
+                </property>
+            </fetchPlan>
+        </collection>
 
     </data>
 
@@ -106,6 +120,28 @@
                             <column property="status"/>
                         </columns>
 
+                    </dataGrid>
+
+                    <h3 text="История моих решений" classNames="mt-m"/>
+
+                    <dataGrid id="incomingRequestsGrid"
+                              dataContainer="requestApprovalsDc"
+                              width="100%"
+                              minHeight="12em">
+                        <actions>
+                            <action id="viewDetails" type="list_read">
+                                <properties>
+                                    <property name="openMode" value="DIALOG"/>
+                                    <property name="viewId" value="Request.detail"/>
+                                </properties>
+                            </action>
+                        </actions>
+                        <columns>
+                            <column property="request.name"/>
+                            <column property="request.initiator"/>
+                            <column property="decision"/>
+                            <column property="actionDate"/>
+                        </columns>
                     </dataGrid>
 
                 </vbox>

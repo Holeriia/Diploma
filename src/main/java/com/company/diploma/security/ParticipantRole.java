@@ -56,4 +56,8 @@ public interface ParticipantRole {
     @EntityAttributePolicy(entityClass = AssignmentComment.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
     @EntityPolicy(entityClass = AssignmentComment.class, actions = EntityPolicyAction.ALL)
     void assignmentComment();
+
+    @EntityAttributePolicy(entityClass = RequestApproval.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
+    @EntityPolicy(entityClass = RequestApproval.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE, EntityPolicyAction.CREATE})
+    void requestApproval();
 }

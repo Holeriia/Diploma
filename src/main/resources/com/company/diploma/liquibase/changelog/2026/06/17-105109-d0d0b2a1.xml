@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="Diploma">
+        <createTable tableName="REQUEST_APPROVAL">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REQUEST_APPROVAL"/>
+            </column>
+            <column name="REQUEST_ID" type="UUID"/>
+            <column name="APPROVER_ID" type="UUID"/>
+            <column name="DECISION" type="VARCHAR(255)"/>
+            <column name="ACTION_DATE" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_APPROVAL_APPROVER" tableName="REQUEST_APPROVAL">
+            <column name="APPROVER_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="APPROVER_ID" baseTableName="REQUEST_APPROVAL"
+                                 constraintName="FK_REQUEST_APPROVAL_ON_APPROVER" referencedColumnNames="ID"
+                                 referencedTableName="PARTICIPANT"/>
+    </changeSet>
+    <changeSet id="3" author="Diploma">
+        <createIndex indexName="IDX_REQUEST_APPROVAL_REQUEST" tableName="REQUEST_APPROVAL">
+            <column name="REQUEST_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="REQUEST_ID" baseTableName="REQUEST_APPROVAL"
+                                 constraintName="FK_REQUEST_APPROVAL_ON_REQUEST" referencedColumnNames="ID"
+                                 referencedTableName="REQUEST"/>
+    </changeSet>
+</databaseChangeLog>

@@ -47,6 +47,8 @@ public class WorkspaceDashboardView extends StandardView {
     private UUID workspaceId;
     @Autowired
     private Messages messages;
+    @ViewComponent
+    private CollectionLoader<RequestApproval> requestApprovalsDl;
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
 
@@ -69,6 +71,9 @@ public class WorkspaceDashboardView extends StandardView {
                 workspace.getName()
         );
         setPageTitle(title);
+
+        requestApprovalsDl.setParameter("workspace", workspace);
+        requestApprovalsDl.load();
     }
 
 
@@ -136,9 +141,6 @@ public class WorkspaceDashboardView extends StandardView {
 
     @ViewComponent
     private CollectionContainer<TaskData> tasksDc;
-
-    @ViewComponent
-    private DataGrid<TaskData> tasksDataGrid;
 
     // Flowable & BPM API
     @Autowired
