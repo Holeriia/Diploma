@@ -41,11 +41,11 @@ public class Request {
     private String status;
 
     @Composition
-    @OneToMany(mappedBy = "request")
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     private List<RequestPriority> priorities;
 
     @Composition
-    @OneToMany(mappedBy = "request")
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     private List<RequestComment> comments;
 
     public List<RequestComment> getComments() {
