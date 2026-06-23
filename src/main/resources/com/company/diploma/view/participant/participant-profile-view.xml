@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://participantProfileView.title">
+    <data>
+        <instance id="participantDc"
+                  class="com.company.diploma.entity.Participant">
+            <fetchPlan extends="_base">
+                <property name="user" fetchPlan="_base">
+                    <property name="interests" fetchPlan="_base"/>
+                </property>
+                <property name="topics" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="participantDl"/>
+        </instance>
+
+        <collection id="interestsDc" class="com.company.diploma.entity.Interest"/>
+        <collection id="topicsDc" class="com.company.diploma.entity.Topic"/>
+    </data>
+
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+
+    <actions>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+
+    <layout padding="true" spacing="true">
+
+        <hr/>
+        <formLayout id="form" dataContainer="participantDc" width="100%">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="3"/>
+            </responsiveSteps>
+
+            <entityPicker id="userField" property="user" label="ФИО участника" readOnly="true"/>
+            <textField id="maxAssignmentsField" property="maxAssignments" label="Лимит назначений" readOnly="true"/>
+            <textField id="assignmentsNowField" property="assignmentsNow" label="Активных назначений" readOnly="true"/>
+        </formLayout>
+
+        <formLayout width="100%">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="50em" columns="2"/>
+            </responsiveSteps>
+
+            <vbox padding="false" spacing="true" themeNames="spacing-s">
+                <span text="Научные интересы" classNames="font-semibold text-m"/>
+                <dataGrid id="interestsGrid"
+                          dataContainer="interestsDc"
+                          width="100%"
+                          height="200px"
+                          columnReorderingAllowed="false"
+                          selectionMode="NONE">
+                    <columns>
+                        <column property="name" header="Наименование интереса"/>
+                    </columns>
+                </dataGrid>
+            </vbox>
+
+            <vbox padding="false" spacing="true" themeNames="spacing-s">
+                <span text="Предложенные темы" classNames="font-semibold text-m"/>
+                <dataGrid id="topicsGrid"
+                          dataContainer="topicsDc"
+                          width="100%"
+                          height="200px"
+                          columnReorderingAllowed="false"
+                          selectionMode="NONE">
+                    <columns>
+                        <column property="name" header="Название темы"/>
+                        <column property="interests" header="Итересы"/>
+                    </columns>
+                </dataGrid>
+            </vbox>
+        </formLayout>
+
+        <hr/>
+    </layout>
+</view>

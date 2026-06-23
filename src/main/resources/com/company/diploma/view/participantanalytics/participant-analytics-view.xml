@@ -19,7 +19,6 @@
     </data>
 
     <layout>
-
         <dataGrid id="analyticsDataGrid"
                   width="100%"
                   height="100%"
@@ -29,7 +28,7 @@
             <columns>
                 <column property="user" header="Участник" />
                 <column key="interestsTextColumn" header="Интересы" />
-                <column key="topicsColumn" header="Темы (ВКР)" />
+                <column key="profileActionsColumn" header="Действия" />
             </columns>
         </dataGrid>
     </layout>

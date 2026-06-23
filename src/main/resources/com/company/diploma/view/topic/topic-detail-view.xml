@@ -30,12 +30,6 @@
             </responsiveSteps>
             <textField id="nameField" property="name"/>
             <textField id="descriptionField" property="description"/>
-            <entityPicker id="authorField" property="author">
-                <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
-                    <action id="entityClearAction" type="entity_clear"/>
-                </actions>
-            </entityPicker>
             <select id="statusField" property="status"/>
         </formLayout>
         <h4 text="msg://com.company.diploma.entity/Topic.interests"/>
