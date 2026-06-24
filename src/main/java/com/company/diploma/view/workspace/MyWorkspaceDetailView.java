@@ -5,9 +5,7 @@ import com.company.diploma.entity.Participant;
 import com.company.diploma.entity.User;
 import com.company.diploma.entity.UserRole;
 import com.company.diploma.entity.Workspace;
-
 import com.company.diploma.view.main.MainView;
-
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.DataManager;

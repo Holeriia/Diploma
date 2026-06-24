@@ -1,10 +1,6 @@
 package com.company.diploma.view.requestapproval;
 
-import com.company.diploma.entity.Request;
-import com.company.diploma.entity.RequestComment;
-import com.company.diploma.entity.Participant;
-import com.company.diploma.entity.RequestApproval;
-import com.company.diploma.entity.RequestDecision;
+import com.company.diploma.entity.*;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.textfield.TextArea;
 import io.jmix.bpmflowui.processform.ProcessFormContext;
@@ -18,7 +14,6 @@ import io.jmix.flowui.Notifications;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.InstanceContainer;
-import io.jmix.flowui.model.InstanceLoader;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

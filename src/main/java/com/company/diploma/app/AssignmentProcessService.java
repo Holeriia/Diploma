@@ -1,9 +1,7 @@
 package com.company.diploma.app;
 
 import com.company.diploma.entity.Assignment;
-import com.company.diploma.entity.AssignmentStatus;
 import io.jmix.core.DataManager;
-import io.jmix.core.FetchPlan;
 import org.flowable.engine.RuntimeService;
 import org.springframework.stereotype.Service;
 

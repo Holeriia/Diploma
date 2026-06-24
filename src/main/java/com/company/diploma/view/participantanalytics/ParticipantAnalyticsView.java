@@ -1,9 +1,9 @@
 package com.company.diploma.view.participantanalytics;
 
+import com.company.diploma.entity.Interest;
 import com.company.diploma.entity.Participant;
 import com.company.diploma.entity.User;
 import com.company.diploma.entity.UserRole;
-import com.company.diploma.entity.Interest;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Span;

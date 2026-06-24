@@ -1,6 +1,9 @@
 package com.company.diploma.app;
 
-import com.company.diploma.entity.*;
+import com.company.diploma.entity.Request;
+import com.company.diploma.entity.RequestPriority;
+import com.company.diploma.entity.RequestStatus;
+import com.company.diploma.entity.User;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
 import org.flowable.engine.RuntimeService;

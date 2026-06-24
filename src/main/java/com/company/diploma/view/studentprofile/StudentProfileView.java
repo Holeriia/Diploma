@@ -3,7 +3,6 @@ package com.company.diploma.view.studentprofile;
 import com.company.diploma.entity.Student;
 import com.company.diploma.entity.User;
 import com.company.diploma.view.main.MainView;
-
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.HasValue;

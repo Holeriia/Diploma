@@ -1,7 +1,8 @@
 package com.company.diploma.view.assignmentedittopic;
 
 
-import com.company.diploma.entity.*;
+import com.company.diploma.entity.Assignment;
+import com.company.diploma.entity.Topic;
 import com.company.diploma.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.router.Route;
@@ -9,9 +10,6 @@ import io.jmix.bpmflowui.processform.ProcessFormContext;
 import io.jmix.bpmflowui.processform.annotation.ProcessForm;
 import io.jmix.bpmflowui.processform.annotation.ProcessVariable;
 import io.jmix.core.DataManager;
-import io.jmix.core.security.CurrentAuthentication;
-import io.jmix.flowui.component.combobox.EntityComboBox;
-import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;

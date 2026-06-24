@@ -2,9 +2,7 @@
 package com.company.diploma.view.interest;
 
 import com.company.diploma.entity.Interest;
-
 import com.company.diploma.view.main.MainView;
-
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.view.*;
 

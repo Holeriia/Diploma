@@ -3,8 +3,6 @@ package com.company.diploma.view.workspacedashboard;
 
 import com.company.diploma.entity.*;
 import com.company.diploma.view.main.MainView;
-import com.company.diploma.view.request.RequestDetailView;
-import io.jmix.core.Messages;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
@@ -18,6 +16,7 @@ import io.jmix.bpmflowui.processform.ProcessFormViews;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.LoadContext;
+import io.jmix.core.Messages;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.DialogWindows;
@@ -26,7 +25,6 @@ import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.action.list.EditAction;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.textfield.JmixIntegerField;
-import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.facet.Timer;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.component.button.JmixButton;
@@ -406,13 +404,4 @@ public class WorkspaceDashboardView extends StandardView {
         topicsDl.load();
         requestApprovalsDl.load();
     }
-
-
-//    @Subscribe
-//    public void onInit(InitEvent event) {
-//        requestsGrid.addItemDoubleClickListener(e -> {
-//            // используем уже сконфигурированный editAction
-//            requestsGrid.getAction("editAction").execute();
-//        });
-//    }
 }

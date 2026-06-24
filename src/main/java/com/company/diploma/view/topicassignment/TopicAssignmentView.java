@@ -2,16 +2,13 @@ package com.company.diploma.view.topicassignment;
 
 import com.company.diploma.app.AssignmentProcessService;
 import com.company.diploma.entity.*;
-import com.company.diploma.view.main.MainView;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.ClickEvent;
 import io.jmix.core.DataManager;
 import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Notifications;
-import io.jmix.flowui.component.combobox.EntityComboBox;
 import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.view.*;
-import com.vaadin.flow.component.ClickEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @ViewController("TopicAssignmentView")
