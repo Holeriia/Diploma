@@ -30,10 +30,10 @@ public class Participant {
     private Workspace workspace;
 
     @Column(name = "MAX_ASSIGNMENTS")
-    private Integer maxAssignments;
+    private Integer maxAssignments = 1;
 
     @Column(name = "ASSIGNMENTS_NOW")
-    private Integer assignmentsNow;
+    private Integer assignmentsNow = 0;
 
     @OneToMany(mappedBy = "author")
     private List<Topic> topics;

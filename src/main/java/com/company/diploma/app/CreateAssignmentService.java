@@ -64,6 +64,14 @@ public class CreateAssignmentService implements JavaDelegate {
             assignment.setMentee(approverParticipant);
         }
 
-        dataManager.save(assignment, request);
+        // Увеличиваем счетчик у инициатора заявки
+        Integer initNow = initiatorPart.getAssignmentsNow();
+        initiatorPart.setAssignmentsNow(initNow == null ? 1 : initNow + 1);
+
+        // Увеличиваем счетчик у одобряющего
+        Integer apprNow = approverParticipant.getAssignmentsNow();
+        approverParticipant.setAssignmentsNow(apprNow == null ? 1 : apprNow + 1);
+
+        dataManager.save(assignment, request, initiatorPart, approverParticipant);
     }
 }

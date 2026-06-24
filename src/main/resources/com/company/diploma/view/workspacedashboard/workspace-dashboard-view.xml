@@ -60,6 +60,12 @@
             </fetchPlan>
         </collection>
 
+        <instance id="participantDc"
+                  class="com.company.diploma.entity.Participant">
+            <fetchPlan extends="_base"/>
+            <loader id="participantDl"/>
+        </instance>
+
     </data>
 
 <!-- для перезагрузки данных в контейнерах-->
@@ -74,6 +80,52 @@
 
     <layout>
         <tabSheet id="mainTabs" width="100%">
+            <tab id="profileTab" label="Профиль участника">
+                <vbox>
+                    <h3 text="Профиль участника"/>
+
+                    <formLayout id="profileForm" dataContainer="participantDc">
+                        <entityPicker id="userField" property="user" label="ФИО участника" readOnly="true"/>
+                        <hbox width="100%" spacing="true">
+                            <integerField id="maxAssignmentsField" property="maxAssignments" label="Лимит назначений"
+                                       dataContainer="participantDc"/>
+                            <integerField id="assignmentsNowField" property="assignmentsNow" label="Активных назначений" readOnly="true"
+                                       dataContainer="participantDc"/>
+                        </hbox>
+                    </formLayout>
+
+                    <h4 text="Мои темы"/>
+
+                    <hbox classNames="buttons-panel">
+                        <button action="topicsGrid.create" text="msg://com.company.diploma.view.workspace/com.company.diploma.create"/>
+                        <button action="topicsGrid.edit" text="msg://com.company.diploma.view.workspace/com.company.diploma.edit"/>
+                        <button action="topicsGrid.remove" text="msg://com.company.diploma.view.workspace/com.company.diploma.delete"/>
+                    </hbox>
+
+                    <dataGrid id="topicsGrid"
+                              dataContainer="topicsDc"
+                              width="100%">
+                        <actions>
+                            <action id="create" type="list_create">
+                                <properties>
+                                    <property name="openMode" value="DIALOG"/>
+                                </properties>
+                            </action>
+                            <action id="edit" type="list_edit">
+                                <properties>
+                                    <property name="openMode" value="DIALOG"/>
+                                </properties>
+                            </action>
+                            <action id="remove" type="list_remove"/>
+                        </actions>
+                        <columns>
+                            <column property="name"/>
+                            <column property="status"/>
+                            <column key="interestsColumn" header="Интересы" width="20em"/>
+                        </columns>
+                    </dataGrid>
+                </vbox>
+            </tab>
             <tab id="tasksTab" label="Входящие">
                 <vbox>
                     <h3 text="Мои задачи"/>
@@ -168,38 +220,6 @@
                             <column property="mentee" header="Менти"/>
                             <column key="topicColumn" header="Тема"/>
                             <column property="status"/>
-                        </columns>
-                    </dataGrid>
-
-
-                    <h3 text="Мои темы"/>
-
-                    <hbox classNames="buttons-panel">
-                        <button action="topicsGrid.create" text="msg://com.company.diploma.view.workspace/com.company.diploma.create"/>
-                        <button action="topicsGrid.edit" text="msg://com.company.diploma.view.workspace/com.company.diploma.edit"/>
-                        <button action="topicsGrid.remove" text="msg://com.company.diploma.view.workspace/com.company.diploma.delete"/>
-                    </hbox>
-
-                    <dataGrid id="topicsGrid"
-                              dataContainer="topicsDc"
-                              width="100%">
-                        <actions>
-                            <action id="create" type="list_create">
-                                <properties>
-                                    <property name="openMode" value="DIALOG"/>
-                                </properties>
-                            </action>
-                            <action id="edit" type="list_edit">
-                                <properties>
-                                    <property name="openMode" value="DIALOG"/>
-                                </properties>
-                            </action>
-                            <action id="remove" type="list_remove"/>
-                        </actions>
-                        <columns>
-                            <column property="name"/>
-                            <column property="status"/>
-                            <column key="interestsColumn" header="Интересы" width="20em"/>
                         </columns>
                     </dataGrid>
                 </vbox>

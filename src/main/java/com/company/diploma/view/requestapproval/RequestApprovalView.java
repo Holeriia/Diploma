@@ -123,6 +123,7 @@ public class RequestApprovalView extends StandardView {
 
         closeWithDefaultAction();
     }
+
     @Subscribe("rejectBtn")
     protected void onRejectBtnClick(ClickEvent<JmixButton> event) {
         saveApprovalLog(RequestDecision.REJECT);

@@ -25,11 +25,14 @@ import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.action.list.EditAction;
 import io.jmix.flowui.component.grid.DataGrid;
+import io.jmix.flowui.component.textfield.JmixIntegerField;
+import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.facet.Timer;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
+import io.jmix.flowui.model.InstanceLoader;
 import io.jmix.flowui.view.*;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
@@ -159,9 +162,13 @@ public class WorkspaceDashboardView extends StandardView {
     private String currentUserName;
     private List<String> userGroupCodes;
 
+    @ViewComponent
+    private InstanceLoader<Participant> participantDl;
+    @ViewComponent
+    private JmixIntegerField maxAssignmentsField;
+
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
-
         ensureUserIsParticipant();
 
         currentUserName = currentUserSubstitution.getEffectiveUser().getUsername();
@@ -169,6 +176,25 @@ public class WorkspaceDashboardView extends StandardView {
                 .stream()
                 .map(UserGroup::getCode)
                 .toList();
+
+        // Загрузка профиля Participant
+        if (currentUserSubstitution.getEffectiveUser() instanceof User currentUser) {
+            dataManager.load(Participant.class)
+                    .query("select p from Participant p where p.user = :currentUser")
+                    .parameter("currentUser", currentUser)
+                    .optional()
+                    .ifPresent(participant -> {
+                        participantDl.setEntityId(participant.getId());
+                        participantDl.load();
+                    });
+
+
+            if (currentUser.getUserRole() != null && "S".equals(currentUser.getUserRole().getId())) {
+                maxAssignmentsField.setReadOnly(true);
+            } else {
+                maxAssignmentsField.setReadOnly(false);
+            }
+        }
 
         tasksDl.load();
     }

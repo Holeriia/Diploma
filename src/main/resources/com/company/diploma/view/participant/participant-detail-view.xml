@@ -6,7 +6,6 @@
         <instance id="participantDc"
                   class="com.company.diploma.entity.Participant">
             <fetchPlan extends="_base">
-                <property name="user" fetchPlan="_instance_name"/>
                 <property name="workspace" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="participantDl"/>

@@ -12,7 +12,9 @@
             </fetchPlan>
             <loader id="participantsDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from Participant e where e.user.userRole <> :currentRole]]>
+                    <![CDATA[select e from Participant e
+                     where e.user.userRole <> :currentRole
+                     and coalesce(e.assignmentsNow, 0) < coalesce(e.maxAssignments, 1)]]>
                 </query>
             </loader>
         </collection>

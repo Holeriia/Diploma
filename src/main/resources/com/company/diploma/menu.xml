@@ -19,6 +19,7 @@
         <item view="Topic.list" title="msg://com.company.diploma.view.topic/topicListView.title"/>
         <item view="RequestApproval.list"
               title="msg://com.company.diploma.view.requestapproval/requestApprovalListView.title"/>
+        <item view="Participant.list" title="msg://com.company.diploma.view.participant/participantListView.title"/>
         <item view="Student.list" title="msg://com.company.diploma.view.student/studentListView.title"/>
         <item view="Teacher.list" title="msg://com.company.diploma.view.teacher/teacherListView.title"/>
     </menu>
